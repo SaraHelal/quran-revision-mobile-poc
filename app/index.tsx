@@ -1,9 +1,16 @@
 import SurahCard from "@/components/SurahCard";
 import { mockSurahs } from "@/data/mockSurahs";
+import { router } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
+  const handleRevision = (id: number) => {
+    router.push({
+      pathname: "/review/[id]",
+      params: { id },
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -15,16 +22,6 @@ export default function Index() {
           due for revision
         </Text>
       </View>
-      {/* <View style={styles.cards}>
-        {mockSurahs.map((surah) => (
-          <SurahCard
-            key={surah.id}
-            surahName={surah.surahName}
-            surahNumber={surah.surahNumber}
-            status={surah.status}
-          />
-        ))}
-      </View> */}
       <FlatList
         keyExtractor={(item) => String(item.id)}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -35,6 +32,7 @@ export default function Index() {
             surahName={item.surahName}
             surahNumber={item.surahNumber}
             status={item.status}
+            onPress={() => handleRevision(item.id)}
           />
         )}
       />

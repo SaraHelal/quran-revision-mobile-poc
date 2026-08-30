@@ -1,53 +1,29 @@
+import { masteryStyles } from "@/constants/masteryStyles";
 import type { MasteryStatus } from "@/types";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import SurahSummary from "./SurahSummary";
 
 type SurahCardProps = {
   surahName: string;
   surahNumber: number;
   status: MasteryStatus;
-};
-const masteryStyles: Record<
-  MasteryStatus,
-  { backgroundColor: string; color: string }
-> = {
-  Weak: {
-    backgroundColor: "#ffe2e2",
-    color: "#B91C1C",
-  },
-  Good: {
-    backgroundColor: "#fef3c6",
-    color: "#b45309",
-  },
-  Excellent: {
-    backgroundColor: "#d0fae5",
-    color: "#047857",
-  },
+  onPress: () => void;
 };
 export default function SurahCard({
   surahName,
   surahNumber,
   status,
+  onPress,
 }: SurahCardProps) {
   const statusStyle = masteryStyles[status];
   return (
     <View style={styles.card}>
-      <View style={styles.cardTop}>
-        <View style={styles.cardInfo}>
-          <Text style={styles.surahName}>{surahName}</Text>
-          <Text style={styles.surahNumber}>Surah {surahNumber}</Text>
-        </View>
-        <View
-          style={[
-            styles.badge,
-            { backgroundColor: statusStyle.backgroundColor },
-          ]}
-        >
-          <Text style={[styles.badgeText, { color: statusStyle.color }]}>
-            {status}
-          </Text>
-        </View>
-      </View>
-      <Pressable style={styles.reviewButton}>
+      <SurahSummary
+        surahName={surahName}
+        surahNumber={surahNumber}
+        status={status}
+      />
+      <Pressable style={styles.reviewButton} onPress={onPress}>
         <Text style={styles.reviewButtonText}>Start Revision</Text>
       </Pressable>
     </View>
