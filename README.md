@@ -1,50 +1,89 @@
-# Welcome to your Expo app 👋
+# Quran Revision Mobile POC
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native proof of concept for a mobile Quran revision experience.
 
-## Get started
+The app helps users identify Surahs that are due for revision, see their current mastery level, and start a focused revision session.
 
-1. Install dependencies
+This project is a mobile exploration of the larger Quran Revision App concept, with an intentionally small scope focused on the core revision journey.
 
-   ```bash
-   npm install
-   ```
+## Current Status
 
-2. Start the app
+**Version 1 is in development.**
 
-   ```bash
-   npx expo start
-   ```
+The current implementation includes:
 
-In the output, you'll find options to open the app in a
+- Today's Revision screen
+- Reusable Surah cards
+- Weak, Good, and Excellent mastery states
+- Dynamic mastery badge styling
+- Mock revision data
+- Scrollable revision list using `FlatList`
+- TypeScript data models
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+The next step is to make the **Start Revision** action interactive and build the revision session flow.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Tech Stack
 
-## Get a fresh project
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- React Native StyleSheet
 
-When you're ready, run:
+## Project Structure
 
-```bash
-npm run reset-project
+```text
+app/          Application screens and routing
+components/   Reusable UI components
+data/         Mock data used during POC development
+types/        Shared TypeScript types
+docs/         Roadmap and project documentation
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started
 
-## Learn more
+Install dependencies:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Start the Expo development server:
 
-## Join the community
+```bash
+npx expo start
+```
 
-Join our community of developers creating universal apps.
+The app can then be opened using Expo Go on a compatible physical device.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Development Approach
+
+The POC is being developed incrementally, starting with mock data and the core mobile experience before introducing backend infrastructure.
+
+This keeps the initial implementation focused on:
+
+- React Native fundamentals
+- Mobile UI and interaction
+- Reusable components
+- Type-safe data structures
+- A clear revision workflow
+
+## Documentation
+
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — development versions, completed work, and planned features
+- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, scope, and key engineering decisions
+
+## Planned Next Steps
+
+- Add Start Revision interaction
+- Add navigation to a revision session
+- Build the revision session screen
+- Record revision results
+- Update mastery status
+- Add Arabic and RTL support
+
+## Related Project
+
+This repository is a focused mobile proof of concept based on the broader Quran Revision App idea.
+
+The full web application includes a more complete revision and memorisation management workflow.
