@@ -56,7 +56,6 @@ export default function SurahCard({
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: 24,
     padding: 16,
     borderRadius: 16,
     backgroundColor: "#ACD2C6",
