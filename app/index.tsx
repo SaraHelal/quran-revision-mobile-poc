@@ -1,6 +1,6 @@
 import SurahCard from "@/components/SurahCard";
 import { mockSurahs } from "@/data/mockSurahs";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,31 +12,39 @@ export default function Index() {
     });
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Today's Revision</Text>
-        <Text style={styles.subtitle}>
-          {mockSurahs.length === 1
-            ? `${mockSurahs.length} surah `
-            : `${mockSurahs.length} surahs `}
-          due for revision
-        </Text>
-      </View>
-      <FlatList
-        keyExtractor={(item) => String(item.id)}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        style={styles.cards}
-        data={mockSurahs}
-        renderItem={({ item }) => (
-          <SurahCard
-            surahName={item.surahName}
-            surahNumber={item.surahNumber}
-            status={item.status}
-            onPress={() => handleRevision(item.id)}
-          />
-        )}
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
       />
-    </SafeAreaView>
+
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>👋 Welcome</Text>
+
+          <Text style={styles.title}>Today's Revision</Text>
+
+          <Text style={styles.subtitle}>
+            Review what's due, or choose a Surah yourself.
+          </Text>
+        </View>
+        <FlatList
+          keyExtractor={(item) => String(item.id)}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          style={styles.cards}
+          data={mockSurahs}
+          renderItem={({ item }) => (
+            <SurahCard
+              surahName={item.surahName}
+              surahNumber={item.surahNumber}
+              status={item.status}
+              onPress={() => handleRevision(item.id)}
+            />
+          )}
+        />
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -49,14 +57,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    gap: 6,
+    backgroundColor: "#009768",
+    borderRadius: 28,
+    padding: 24,
   },
+  welcome: {
+    color: "#D1FAE5",
+    fontSize: 15,
+    fontWeight: "500",
+  },
+
   title: {
-    fontSize: 28,
+    color: "#FFFFFF",
+    fontSize: 30,
     fontWeight: "700",
+    marginTop: 8,
   },
+
   subtitle: {
-    fontSize: 16,
+    color: "#ECFDF5",
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 8,
   },
   cards: {
     flex: 1,

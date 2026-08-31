@@ -1,6 +1,7 @@
 import { masteryStyles } from "@/constants/masteryStyles";
 import type { MasteryStatus } from "@/types";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import SecondaryButton from "./SecondaryButton";
 import SurahSummary from "./SurahSummary";
 
 type SurahCardProps = {
@@ -23,9 +24,9 @@ export default function SurahCard({
         surahNumber={surahNumber}
         status={status}
       />
-      <Pressable style={styles.reviewButton} onPress={onPress}>
-        <Text style={styles.reviewButtonText}>Start Revision</Text>
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <SecondaryButton label="Start Revision" onPress={onPress} showArrow />
+      </View>
     </View>
   );
 }
@@ -33,8 +34,10 @@ export default function SurahCard({
 const styles = StyleSheet.create({
   card: {
     padding: 16,
-    borderRadius: 16,
-    backgroundColor: "#ACD2C6",
+    borderRadius: 18,
+    backgroundColor: "#F0FDF8",
+    borderWidth: 1,
+    borderColor: "#B7F3D7",
   },
   cardTop: {
     flexDirection: "row",
@@ -73,5 +76,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#fff",
+  },
+  buttonContainer: {
+    marginTop: 10,
+    alignItems: "flex-start",
   },
 });

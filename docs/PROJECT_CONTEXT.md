@@ -1,23 +1,24 @@
 # Quran Revision Mobile POC — Project Context
 
-**Last updated:** 30 August 2026
+**Last updated:** 31 August 2026
 
 ## Overview
 
 Quran Revision Mobile POC is a React Native proof of concept for a mobile Quran revision experience.
 
-The project explores a focused revision workflow where users can see the Surahs that need revision, understand their current mastery level, and start a revision session from a simple mobile interface.
+The project explores a focused revision workflow where users can see the Surahs that need revision, understand their current mastery level, start a revision session, revise from memory, and rate the result.
 
-This repository is intentionally smaller in scope than the full Quran Revision web application.
+This repository is intentionally smaller in scope than the full Quran Revision web application while keeping a similar product identity and revision experience.
 
 ## Purpose
 
 The main goals of this POC are to:
 
 - Explore React Native development using an existing product idea
-- Design a mobile-first revision experience
+- Design a focused mobile-first Quran revision experience
 - Build reusable and typed React Native components
-- Demonstrate a focused end-to-end revision flow
+- Demonstrate an end-to-end revision flow
+- Keep the mobile experience visually connected to the Quran Revision web application
 - Keep the architecture simple enough to iterate quickly
 
 ## Technology Stack
@@ -33,10 +34,20 @@ The main goals of this POC are to:
 
 ```text
 app/
+  _layout.tsx
   index.tsx
+  review/
+    [id].tsx
 
 components/
+  PrimaryButton.tsx
+  SecondaryButton.tsx
+  SessionSurahInfo.tsx
   SurahCard.tsx
+  SurahSummary.tsx
+
+constants/
+  masteryStyles.ts
 
 data/
   mockSurahs.ts
@@ -53,9 +64,27 @@ docs/
 
 Contains application screens and routing.
 
+`index.tsx` displays the Today's Revision screen.
+
+`review/[id].tsx` is a dynamic route used for individual revision sessions.
+
 ### `components/`
 
-Contains reusable UI components such as `SurahCard`.
+Contains reusable UI components.
+
+Current shared components include:
+
+- `SurahCard` for displaying a Surah in the revision list
+- `SurahSummary` for reusable Surah information inside list cards
+- `SessionSurahInfo` for highlighting the active Surah during a revision session
+- `PrimaryButton` for primary actions such as finishing a revision
+- `SecondaryButton` for secondary actions such as starting a revision
+
+### `constants/`
+
+Contains shared UI and domain constants.
+
+`masteryStyles.ts` defines the colours used for Weak, Good, and Excellent mastery states so that they remain visually consistent throughout the application.
 
 ### `data/`
 
@@ -63,7 +92,7 @@ Contains temporary mock data used while developing the POC without a backend.
 
 ### `types/`
 
-Contains shared TypeScript types such as `Surah` and `MasteryStatus`.
+Contains shared TypeScript domain types such as `Surah` and `MasteryStatus`.
 
 ### `docs/`
 
@@ -86,13 +115,16 @@ Mastery status is currently limited to:
 
 ## Current User Flow
 
-1. User opens Today's Revision.
+1. The user opens Today's Revision.
 2. The app displays Surahs due for revision.
-3. Each Surah displays its mastery status.
-4. User selects Start Revision.
-5. The app will navigate to a revision session.
-
-Steps 4–5 are the next part of Version 1 development.
+3. Each Surah displays its current mastery status.
+4. The user selects Start Revision.
+5. Expo Router navigates to a dedicated revision session using the Surah ID.
+6. The active Surah and its current mastery status are displayed.
+7. The user is prompted to revise the Surah from memory.
+8. The user selects Finish Revision after completing the revision.
+9. Weak, Good, and Excellent rating options are revealed.
+10. The next step is to save the selected result and reflect the updated mastery status on the home screen.
 
 ## Key Engineering Decisions
 
@@ -102,34 +134,91 @@ The POC uses mock data instead of Firebase so that development can focus on Reac
 
 ### Reusable Components
 
-Surah information is rendered through a reusable `SurahCard` component rather than duplicating UI for each Surah.
+Repeated interface elements are extracted into focused reusable components instead of duplicating UI between screens.
 
-### Typed Domain Data
+Screen components remain responsible for page-level layout and behaviour, while reusable components handle their own presentation and interaction.
 
-Shared TypeScript types define the expected shape of Surah and mastery data.
+### Separate List and Session Presentation
+
+The Surah list and revision session have different visual requirements.
+
+`SurahSummary` is designed for compact Surah information inside list cards, while `SessionSurahInfo` gives the active Surah stronger visual hierarchy during a revision session.
+
+This avoids forcing a single component to support unrelated layouts.
+
+### Reusable Button Components
+
+Primary and secondary actions use separate reusable button components.
+
+`PrimaryButton` represents the main action in a flow, while `SecondaryButton` is used for less prominent actions such as starting a revision from a Surah card.
+
+The components are intentionally kept simple while the design system remains small.
+
+### Shared Mastery Styling
+
+Weak, Good, and Excellent colours are defined centrally in `constants/masteryStyles.ts`.
+
+This avoids duplicating colour definitions and keeps mastery states visually consistent across the home screen and revision session.
 
 ### FlatList for Revision Items
 
-The revision list uses React Native's `FlatList`, making the implementation appropriate for potentially larger and scrollable collections.
+The revision list uses React Native's `FlatList`, making the implementation suitable for larger and scrollable collections.
+
+Stable IDs are used as list keys, and item separators control spacing between Surah cards.
+
+### File-Based Navigation
+
+Expo Router provides file-based navigation.
+
+The dynamic route:
+
+```text
+review/[id].tsx
+```
+
+allows each revision session to receive the selected Surah ID and load the appropriate Surah from the current data source.
+
+### Progressive Revision Flow
+
+Rating options are not displayed immediately when a revision session begins.
+
+The user first revises the Surah and selects Finish Revision. The Weak, Good, and Excellent rating options are then revealed.
+
+This keeps the interface focused on the current step of the revision process.
+
+### Mobile and Web Product Consistency
+
+The mobile POC follows the visual language of the Quran Revision web application, including:
+
+- Green primary branding
+- Soft green Surah cards
+- Consistent mastery colours
+- Rounded interface elements
+- Clear revision-focused information hierarchy
+
+The mobile interface is not intended to be a pixel-for-pixel copy of the web application. Layout and navigation are adapted to common mobile interaction patterns.
 
 ### English-First POC
 
-The initial POC interface is in English to keep the interview demo and technical discussion straightforward.
+The initial POC interface is in English to keep the technical demonstration and interview discussion straightforward.
 
 Arabic and RTL support are planned as a later enhancement.
 
-## Scope
+## Current Scope
 
-The current POC focuses on the core mobile revision experience.
+The current POC focuses on a complete core revision flow, from selecting a Surah through completing a revision session and rating the result.
 
-It intentionally does not yet include:
+The next implementation step is to make the selected revision result update the application state and appear immediately on the home screen.
+
+The POC intentionally does not yet include:
 
 - Authentication
 - Firebase / Firestore
 - Cloud synchronisation
-- Analytics
-- Full revision history
-- Production-level scheduling
+- Persistent revision history
+- Production-level spaced revision scheduling
+- Analytics and progress charts
+- Arabic and RTL localisation
 
 These features can be introduced after the core mobile revision flow is complete.
 
@@ -137,7 +226,10 @@ These features can be introduced after the core mobile revision flow is complete
 
 - Build features incrementally
 - Understand each React Native concept before adding complexity
-- Keep components small and reusable
+- Keep components small and focused
+- Extract reusable UI only when there is a clear reuse case
 - Use TypeScript for clear data contracts
-- Keep Version 1 focused on the core revision journey
+- Keep Version 1 focused on the complete core revision journey
+- Keep mobile and web experiences visually connected
 - Avoid unnecessary backend complexity during the POC stage
+- Avoid premature abstraction and overengineering

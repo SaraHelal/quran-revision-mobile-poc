@@ -16,7 +16,6 @@ export default function SessionSurahInfo({
   const statusStyle = masteryStyles[status];
   return (
     <View style={styles.container}>
-      {" "}
       <Text style={styles.label}>Revision Session</Text>
       <Text style={styles.surahName}>{surahName}</Text>
       <Text style={styles.surahNumber}>Surah {surahNumber}</Text>

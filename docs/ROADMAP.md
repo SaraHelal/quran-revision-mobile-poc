@@ -9,7 +9,7 @@ Build a focused React Native proof of concept for a Quran revision experience.
 
 The mobile POC explores how users can quickly see the Surahs due for revision, understand their current mastery level, and start a revision session from a simple mobile-first interface.
 
-## Version 1 — Revision List
+## Version 1 — Core Revision Flow
 
 **Status:** In progress
 
@@ -23,18 +23,26 @@ The mobile POC explores how users can quickly see the Surahs due for revision, u
 - [x] Render Surahs using `FlatList`
 - [x] Add stable list keys and item separators
 - [x] Support scrolling while keeping the screen header visible
-- [ ] Make the Start Revision button interactive
-- [ ] Add navigation to a revision session
-- [ ] Build the first revision session screen
+- [x] Make the Start Revision action interactive
+- [x] Add navigation to a revision session
+- [x] Build the revision session screen
+- [x] Add a dedicated session Surah summary
+- [x] Add revision guidance before rating
+- [x] Add Weak, Good, and Excellent result options
+- [x] Reveal rating options after finishing the revision
+- [x] Create reusable primary and secondary button components
+- [x] Add shared mastery styling
+- [x] Align the mobile UI with the web application's visual language
+- [ ] Save the selected revision result
+- [ ] Reflect the updated mastery status on the home screen
 - [ ] Test and polish the complete Version 1 flow
 
-## Version 2 — Revision Experience
+## Version 2 — Revision Scheduling and Persistence
 
 **Status:** Planned
 
-- [ ] Record a revision result
-- [ ] Update mastery status after revision
 - [ ] Calculate and display the next review date
+- [ ] Add persistent revision data
 - [ ] Add empty and completion states
 - [ ] Improve revision feedback
 - [ ] Add Arabic and RTL support

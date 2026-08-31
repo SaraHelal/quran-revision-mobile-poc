@@ -1,26 +1,34 @@
 # Quran Revision Mobile POC
 
-A React Native proof of concept for a mobile Quran revision experience.
+A React Native proof of concept for a focused Quran revision experience.
 
-The app helps users identify Surahs that are due for revision, see their current mastery level, and start a focused revision session.
+The app helps users identify Surahs that are due for revision, see their current mastery level, start a revision session, revise from memory, and rate the result.
 
-This project is a mobile exploration of the larger Quran Revision App concept, with an intentionally small scope focused on the core revision journey.
+This project is a mobile exploration of the broader Quran Revision App concept. It keeps the initial scope intentionally focused on the core revision journey while adapting the existing web experience for mobile.
 
 ## Current Status
 
-**Version 1 is in development.**
+**Version 1 — Core Revision Flow is in development.**
 
 The current implementation includes:
 
-- Today's Revision screen
+- Today's Revision home screen
+- Mobile-first revision list
 - Reusable Surah cards
 - Weak, Good, and Excellent mastery states
-- Dynamic mastery badge styling
-- Mock revision data
+- Shared mastery status styling
 - Scrollable revision list using `FlatList`
-- TypeScript data models
+- Dynamic revision session routes using Expo Router
+- Dedicated revision session screen
+- Revision guidance before rating
+- Progressive revision flow
+- Weak, Good, and Excellent result selection
+- Reusable primary and secondary buttons
+- TypeScript domain models
+- Mock revision data
+- Mobile UI inspired by the Quran Revision web application
 
-The next step is to make the **Start Revision** action interactive and build the revision session flow.
+The next step is to save the selected revision result and reflect the updated mastery status on the home screen.
 
 ## Tech Stack
 
@@ -28,17 +36,84 @@ The next step is to make the **Start Revision** action interactive and build the
 - Expo
 - TypeScript
 - Expo Router
-- React Native StyleSheet
+- React Native `StyleSheet`
 
 ## Project Structure
 
 ```text
-app/          Application screens and routing
-components/   Reusable UI components
-data/         Mock data used during POC development
-types/        Shared TypeScript types
-docs/         Roadmap and project documentation
+app/
+  _layout.tsx
+  index.tsx
+  review/
+    [id].tsx
+
+components/
+  PrimaryButton.tsx
+  SecondaryButton.tsx
+  SessionSurahInfo.tsx
+  SurahCard.tsx
+  SurahSummary.tsx
+
+constants/
+  masteryStyles.ts
+
+data/
+  mockSurahs.ts
+
+types/
+  index.ts
+
+docs/
+  ROADMAP.md
+  PROJECT_CONTEXT.md
 ```
+
+## Core Revision Flow
+
+The current mobile experience follows this flow:
+
+1. Open Today's Revision.
+2. View Surahs that are due for revision.
+3. See the current mastery status for each Surah.
+4. Select Start Revision.
+5. Open a dedicated revision session.
+6. Revise the Surah from memory.
+7. Select Finish Revision.
+8. Rate the revision as Weak, Good, or Excellent.
+
+The next development step will connect the selected result back to the application state.
+
+## UI and Product Direction
+
+The mobile POC is based on the same product concept as the Quran Revision web application.
+
+The two experiences share a visual language that includes:
+
+- Green primary branding
+- Soft green revision cards
+- Consistent mastery status colours
+- Rounded interface elements
+- Clear revision-focused information hierarchy
+
+The React Native version is not intended to be a direct copy of the web interface. Navigation, spacing, hierarchy, and interactions are adapted for a mobile experience.
+
+The initial POC uses English for a straightforward technical demonstration. Arabic and RTL support are planned for a later version.
+
+## Development Approach
+
+The project is being developed incrementally.
+
+The initial version uses mock data instead of backend infrastructure so development can focus on:
+
+- React Native fundamentals
+- Mobile UI and interaction
+- Component composition
+- Reusable UI components
+- Type-safe domain data
+- Navigation
+- A clear end-to-end revision workflow
+
+Backend infrastructure and persistence can be introduced after the core mobile experience is complete.
 
 ## Getting Started
 
@@ -56,34 +131,35 @@ npx expo start
 
 The app can then be opened using Expo Go on a compatible physical device.
 
-## Development Approach
-
-The POC is being developed incrementally, starting with mock data and the core mobile experience before introducing backend infrastructure.
-
-This keeps the initial implementation focused on:
-
-- React Native fundamentals
-- Mobile UI and interaction
-- Reusable components
-- Type-safe data structures
-- A clear revision workflow
-
 ## Documentation
 
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — development versions, completed work, and planned features
-- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, scope, and key engineering decisions
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — current development progress and planned versions
+- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, scope, user flow, and engineering decisions
 
-## Planned Next Steps
+## Version 1 — Remaining Work
 
-- Add Start Revision interaction
-- Add navigation to a revision session
-- Build the revision session screen
-- Record revision results
-- Update mastery status
-- Add Arabic and RTL support
+- Save the selected revision result
+- Reflect the updated mastery status on the home screen
+- Test the complete revision journey
+- Polish the Version 1 mobile experience
+
+## Future Direction
+
+Potential future development includes:
+
+- Persistent user data
+- Firebase Authentication
+- Cloud Firestore integration
+- Spaced revision scheduling
+- Next review dates
+- Revision history
+- Progress statistics and analytics
+- Arabic localisation
+- RTL support
+- Synchronisation with the Quran Revision web application
 
 ## Related Project
 
-This repository is a focused mobile proof of concept based on the broader Quran Revision App idea.
+This repository is a focused mobile proof of concept based on the broader Quran Revision App.
 
-The full web application includes a more complete revision and memorisation management workflow.
+The web application contains a more complete memorisation management and revision scheduling workflow.
