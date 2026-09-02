@@ -1,9 +1,9 @@
 import PrimaryButton from "@/components/PrimaryButton";
 import SessionSurahInfo from "@/components/SessionSurahInfo";
 import { masteryStyles } from "@/constants/masteryStyles";
-import { mockSurahs } from "@/data/mockSurahs";
+import { useSurahs } from "@/context/SurahsContext";
 import type { MasteryStatus } from "@/types";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -11,14 +11,29 @@ const masteryOptions: MasteryStatus[] = ["Weak", "Good", "Excellent"];
 
 export default function ReviewScreen() {
   const { id } = useLocalSearchParams();
+  const { surahs, setSurahs, setSuccessMsg } = useSurahs();
   const [isRevisionFinished, setIsRevisionFinished] = useState(false);
   const [selectedResult, setSelectedResult] = useState<MasteryStatus | null>(
     null,
   );
-  const surah = mockSurahs.find((surah) => surah.id === Number(id));
+  const surah = surahs.find((surah) => surah.id === Number(id));
 
   const handleResult = (result: MasteryStatus) => {
     setSelectedResult(result);
+  };
+
+  const handleSaveRevision = (updatedStatus: MasteryStatus) => {
+    if (!surah) return;
+    setSurahs((prevSurahs) =>
+      prevSurahs.map((prevSurah) => {
+        if (prevSurah.id === Number(id)) {
+          return { ...prevSurah, status: updatedStatus };
+        }
+        return prevSurah;
+      }),
+    );
+    setSuccessMsg(`${surah.surahName} Revision saved successfully`);
+    router.back();
   };
   if (!surah) return <Text>Surah not found</Text>;
   return (
@@ -83,6 +98,15 @@ export default function ReviewScreen() {
               <PrimaryButton
                 label="Finish Revision"
                 onPress={() => setIsRevisionFinished(true)}
+              />
+            </View>
+          )}
+
+          {selectedResult && (
+            <View style={styles.saveButtonContainer}>
+              <PrimaryButton
+                label="Save Revision"
+                onPress={() => handleSaveRevision(selectedResult)}
               />
             </View>
           )}

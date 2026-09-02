@@ -1,16 +1,29 @@
 import SurahCard from "@/components/SurahCard";
-import { mockSurahs } from "@/data/mockSurahs";
+import { useSurahs } from "@/context/SurahsContext";
 import { router, Stack } from "expo-router";
+import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
+  const { surahs, successMsg, setSuccessMsg } = useSurahs();
+
   const handleRevision = (id: number) => {
     router.push({
       pathname: "/review/[id]",
       params: { id },
     });
   };
+  useEffect(() => {
+    if (!successMsg) return;
+    const timer = setTimeout(() => {
+      setSuccessMsg(null);
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [successMsg, setSuccessMsg]);
+
   return (
     <>
       <Stack.Screen
@@ -29,11 +42,16 @@ export default function Index() {
             Review what's due, or choose a Surah yourself.
           </Text>
         </View>
+        {successMsg && (
+          <View style={styles.successMessage}>
+            <Text style={styles.successMessageText}>{successMsg}</Text>
+          </View>
+        )}
         <FlatList
           keyExtractor={(item) => String(item.id)}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.cards}
-          data={mockSurahs}
+          data={surahs}
           renderItem={({ item }) => (
             <SurahCard
               surahName={item.surahName}
@@ -83,5 +101,17 @@ const styles = StyleSheet.create({
   cards: {
     flex: 1,
     marginTop: 20,
+  },
+  successMessage: {
+    marginTop: 16,
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: "#D1FAE5",
+  },
+
+  successMessageText: {
+    color: "#047857",
+    fontWeight: "600",
+    textAlign: "center",
   },
 });

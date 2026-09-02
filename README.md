@@ -27,8 +27,14 @@ The current implementation includes:
 - TypeScript domain models
 - Mock revision data
 - Mobile UI inspired by the Quran Revision web application
+- Shared Surah state using React Context
+- Custom `useSurahs` hook for accessing revision state
+- Revision result saving
+- Immediate mastery status updates on the home screen
+- Success feedback containing the revised Surah name
+- Automatic success message dismissal after three seconds
 
-The next step is to save the selected revision result and reflect the updated mastery status on the home screen.
+The core Version 1 revision flow is now functional using shared in-memory state. The remaining work focuses on testing and UI polish before adding persistent data.
 
 ## Tech Stack
 
@@ -80,8 +86,11 @@ The current mobile experience follows this flow:
 6. Revise the Surah from memory.
 7. Select Finish Revision.
 8. Rate the revision as Weak, Good, or Excellent.
-
-The next development step will connect the selected result back to the application state.
+9. Select a revision result.
+10. Save the revision.
+11. Return automatically to Today's Revision.
+12. See the updated mastery status immediately.
+13. Receive a success message confirming which Surah was updated.
 
 ## UI and Product Direction
 
@@ -138,8 +147,6 @@ The app can then be opened using Expo Go on a compatible physical device.
 
 ## Version 1 — Remaining Work
 
-- Save the selected revision result
-- Reflect the updated mastery status on the home screen
 - Test the complete revision journey
 - Polish the Version 1 mobile experience
 

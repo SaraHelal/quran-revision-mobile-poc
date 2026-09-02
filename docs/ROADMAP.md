@@ -33,8 +33,12 @@ The mobile POC explores how users can quickly see the Surahs due for revision, u
 - [x] Create reusable primary and secondary button components
 - [x] Add shared mastery styling
 - [x] Align the mobile UI with the web application's visual language
-- [ ] Save the selected revision result
-- [ ] Reflect the updated mastery status on the home screen
+- [x] Save the selected revision result
+- [x] Reflect the updated mastery status on the home screen
+- [x] Share Surah state between screens using React Context
+- [x] Display revision success feedback on the home screen
+- [x] Include the revised Surah name in the success message
+- [x] Hide success feedback automatically after three seconds
 - [ ] Test and polish the complete Version 1 flow
 
 ## Version 2 — Revision Scheduling and Persistence

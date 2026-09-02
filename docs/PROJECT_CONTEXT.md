@@ -58,6 +58,9 @@ types/
 docs/
   ROADMAP.md
   PROJECT_CONTEXT.md
+
+context/
+  SurahsContext.tsx
 ```
 
 ### `app/`
@@ -124,9 +127,28 @@ Mastery status is currently limited to:
 7. The user is prompted to revise the Surah from memory.
 8. The user selects Finish Revision after completing the revision.
 9. Weak, Good, and Excellent rating options are revealed.
-10. The next step is to save the selected result and reflect the updated mastery status on the home screen.
+10. The user selects a revision result.
+11. The selected mastery status is saved to shared application state.
+12. The app returns to the home screen.
+13. The updated mastery status is immediately reflected in the Surah card.
+14. A success message containing the Surah name is displayed.
+15. The success message disappears automatically after three seconds.
 
 ## Key Engineering Decisions
+
+### Shared Surah State
+
+Surah data is managed through `SurahsContext` so that the home screen and revision session share the same source of truth.
+
+The provider owns the Surah state, while a custom `useSurahs` hook gives screens access to the shared data and update functions.
+
+This allows a revision result saved from the revision screen to be immediately reflected on the home screen without passing state through route parameters.
+
+### Temporary Success Feedback
+
+Revision success feedback is stored in shared context because the revision screen navigates back to the home screen immediately after saving.
+
+The home screen displays the message and uses `useEffect` with a timer cleanup to remove it automatically after three seconds.
 
 ### Mock Data First
 
@@ -208,7 +230,7 @@ Arabic and RTL support are planned as a later enhancement.
 
 The current POC focuses on a complete core revision flow, from selecting a Surah through completing a revision session and rating the result.
 
-The next implementation step is to make the selected revision result update the application state and appear immediately on the home screen.
+The core Version 1 revision journey is now functional using in-memory shared state. The remaining Version 1 work focuses on testing and UI polish before introducing persistence and more advanced revision scheduling.
 
 The POC intentionally does not yet include:
 
