@@ -1,22 +1,32 @@
+import NotFoundState from "@/components/NotFoundState";
 import PrimaryButton from "@/components/PrimaryButton";
 import SessionSurahInfo from "@/components/SessionSurahInfo";
 import { masteryStyles } from "@/constants/masteryStyles";
 import { useSurahs } from "@/context/SurahsContext";
 import type { MasteryStatus } from "@/types";
-import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  router,
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 const masteryOptions: MasteryStatus[] = ["Weak", "Good", "Excellent"];
 
 export default function ReviewScreen() {
   const { id } = useLocalSearchParams();
+  const surahId = Number(id);
+  const navigation = useNavigation();
   const { surahs, setSurahs, setSuccessMsg } = useSurahs();
   const [isRevisionFinished, setIsRevisionFinished] = useState(false);
+  const [isRevisionSaved, setIsRevisionSaved] = useState(false);
   const [selectedResult, setSelectedResult] = useState<MasteryStatus | null>(
     null,
   );
-  const surah = surahs.find((surah) => surah.id === Number(id));
+  const hasUnsavedProgress = isRevisionFinished;
+  const surah = surahs.find((surah) => surah.id === surahId);
 
   const handleResult = (result: MasteryStatus) => {
     setSelectedResult(result);
@@ -26,16 +36,55 @@ export default function ReviewScreen() {
     if (!surah) return;
     setSurahs((prevSurahs) =>
       prevSurahs.map((prevSurah) => {
-        if (prevSurah.id === Number(id)) {
+        if (prevSurah.id === surahId) {
           return { ...prevSurah, status: updatedStatus };
         }
         return prevSurah;
       }),
     );
-    setSuccessMsg(`${surah.surahName} Revision saved successfully`);
-    router.back();
+    setSuccessMsg(`${surah.surahName} revision saved successfully`);
+    setIsRevisionSaved(true);
   };
-  if (!surah) return <Text>Surah not found</Text>;
+
+  useEffect(() => {
+    if (isRevisionSaved) {
+      router.back();
+    }
+  }, [isRevisionSaved]);
+
+  useEffect(() => {
+    if (!hasUnsavedProgress || isRevisionSaved) return;
+    const unsubscribe = navigation.addListener("beforeRemove", (event) => {
+      event.preventDefault();
+      Alert.alert("Leave revision?", "Your progress won't be saved.", [
+        {
+          text: "Stay",
+          style: "cancel",
+        },
+        {
+          text: "Leave",
+          style: "destructive",
+          onPress: () => {
+            navigation.dispatch(event.data.action);
+          },
+        },
+      ]);
+    });
+
+    return unsubscribe;
+  }, [navigation, isRevisionSaved, hasUnsavedProgress]);
+  if (!surah) {
+    return (
+      <>
+        <Stack.Screen options={{ title: "" }} />
+
+        <NotFoundState
+          title="Surah not found"
+          message="This Surah could not be found. Please return and try again."
+        />
+      </>
+    );
+  }
   return (
     <>
       <Stack.Screen

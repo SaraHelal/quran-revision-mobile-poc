@@ -14,8 +14,10 @@ export default function Index() {
       params: { id },
     });
   };
+
   useEffect(() => {
     if (!successMsg) return;
+
     const timer = setTimeout(() => {
       setSuccessMsg(null);
     }, 3000);
@@ -36,10 +38,10 @@ export default function Index() {
         <View style={styles.header}>
           <Text style={styles.welcome}>👋 Welcome</Text>
 
-          <Text style={styles.title}>Today's Revision</Text>
+          <Text style={styles.title}>{"Today's Revision"}</Text>
 
           <Text style={styles.subtitle}>
-            Review what's due, or choose a Surah yourself.
+            {"Review what's due, or choose a Surah yourself."}
           </Text>
         </View>
         {successMsg && (

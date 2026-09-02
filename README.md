@@ -8,7 +8,7 @@ This project is a mobile exploration of the broader Quran Revision App concept. 
 
 ## Current Status
 
-**Version 1 — Core Revision Flow is in development.**
+**Version 1 — Core Revision Flow is complete.**
 
 The current implementation includes:
 
@@ -33,8 +33,15 @@ The current implementation includes:
 - Immediate mastery status updates on the home screen
 - Success feedback containing the revised Surah name
 - Automatic success message dismissal after three seconds
+- Protection against accidentally leaving a revision with unsaved progress
+- Native confirmation before discarding unsaved revision progress
+- Android hardware back protection
+- Graceful handling of invalid review route IDs
+- Reusable not-found state
 
-The core Version 1 revision flow is now functional using shared in-memory state. The remaining work focuses on testing and UI polish before adding persistent data.
+The complete Version 1 revision flow is functional and has been tested using shared in-memory state.
+
+Persistent storage is intentionally outside the Version 1 scope. Reloading or restarting the application currently resets Surah data to the mock values.
 
 ## Tech Stack
 
@@ -42,6 +49,7 @@ The core Version 1 revision flow is now functional using shared in-memory state.
 - Expo
 - TypeScript
 - Expo Router
+- React Context
 - React Native `StyleSheet`
 
 ## Project Structure
@@ -54,6 +62,7 @@ app/
     [id].tsx
 
 components/
+  NotFoundState.tsx
   PrimaryButton.tsx
   SecondaryButton.tsx
   SessionSurahInfo.tsx
@@ -62,6 +71,9 @@ components/
 
 constants/
   masteryStyles.ts
+
+context/
+  SurahsContext.tsx
 
 data/
   mockSurahs.ts
@@ -86,11 +98,12 @@ The current mobile experience follows this flow:
 6. Revise the Surah from memory.
 7. Select Finish Revision.
 8. Rate the revision as Weak, Good, or Excellent.
-9. Select a revision result.
-10. Save the revision.
-11. Return automatically to Today's Revision.
-12. See the updated mastery status immediately.
-13. Receive a success message confirming which Surah was updated.
+9. Save the revision result.
+10. Return automatically to Today's Revision.
+11. See the updated mastery status immediately.
+12. Receive a success message confirming which Surah was updated.
+
+If the user attempts to leave after finishing a revision but before saving the result, the app displays a confirmation alert before discarding the unsaved progress.
 
 ## UI and Product Direction
 
@@ -112,7 +125,7 @@ The initial POC uses English for a straightforward technical demonstration. Arab
 
 The project is being developed incrementally.
 
-The initial version uses mock data instead of backend infrastructure so development can focus on:
+Version 1 intentionally uses mock data and in-memory state instead of backend infrastructure so development can focus on:
 
 - React Native fundamentals
 - Mobile UI and interaction
@@ -120,9 +133,29 @@ The initial version uses mock data instead of backend infrastructure so developm
 - Reusable UI components
 - Type-safe domain data
 - Navigation
+- Shared application state
 - A clear end-to-end revision workflow
+- Defensive navigation and error states
 
-Backend infrastructure and persistence can be introduced after the core mobile experience is complete.
+Backend infrastructure and persistence can be introduced in a later version without expanding the initial POC unnecessarily.
+
+## Version 1 Testing
+
+The core Version 1 flow has been manually tested for:
+
+- Starting a revision session
+- Revealing rating options after finishing a revision
+- Selecting and saving a mastery result
+- Reflecting the updated mastery status on the home screen
+- Displaying and automatically dismissing success feedback
+- Leaving a revision before any meaningful progress without a warning
+- Protecting unsaved revision progress with a confirmation alert
+- Leaving without saving while preserving the previous mastery status
+- Returning normally after a successful save
+- Android hardware back behaviour
+- Invalid review route IDs
+- Reload behaviour with in-memory mock data
+- Lint validation with no remaining errors or warnings
 
 ## Getting Started
 
@@ -142,13 +175,8 @@ The app can then be opened using Expo Go on a compatible physical device.
 
 ## Documentation
 
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — current development progress and planned versions
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — development progress and planned versions
 - [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, scope, user flow, and engineering decisions
-
-## Version 1 — Remaining Work
-
-- Test the complete revision journey
-- Polish the Version 1 mobile experience
 
 ## Future Direction
 

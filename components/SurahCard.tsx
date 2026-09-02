@@ -1,4 +1,3 @@
-import { masteryStyles } from "@/constants/masteryStyles";
 import type { MasteryStatus } from "@/types";
 import { StyleSheet, View } from "react-native";
 import SecondaryButton from "./SecondaryButton";
@@ -16,7 +15,6 @@ export default function SurahCard({
   status,
   onPress,
 }: SurahCardProps) {
-  const statusStyle = masteryStyles[status];
   return (
     <View style={styles.card}>
       <SurahSummary

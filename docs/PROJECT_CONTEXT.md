@@ -1,6 +1,6 @@
 # Quran Revision Mobile POC — Project Context
 
-**Last updated:** 31 August 2026
+**Last updated:** 2 September 2026
 
 ## Overview
 
@@ -40,6 +40,7 @@ app/
     [id].tsx
 
 components/
+  NotFoundState.tsx
   PrimaryButton.tsx
   SecondaryButton.tsx
   SessionSurahInfo.tsx
@@ -48,6 +49,9 @@ components/
 
 constants/
   masteryStyles.ts
+
+context/
+  SurahsContext.tsx
 
 data/
   mockSurahs.ts
@@ -58,9 +62,6 @@ types/
 docs/
   ROADMAP.md
   PROJECT_CONTEXT.md
-
-context/
-  SurahsContext.tsx
 ```
 
 ### `app/`
@@ -82,12 +83,21 @@ Current shared components include:
 - `SessionSurahInfo` for highlighting the active Surah during a revision session
 - `PrimaryButton` for primary actions such as finishing a revision
 - `SecondaryButton` for secondary actions such as starting a revision
+- `NotFoundState` for displaying reusable missing-content and invalid-route states
 
 ### `constants/`
 
 Contains shared UI and domain constants.
 
 `masteryStyles.ts` defines the colours used for Weak, Good, and Excellent mastery states so that they remain visually consistent throughout the application.
+
+### `context/`
+
+Contains shared application state.
+
+`SurahsContext.tsx` owns the current in-memory Surah data and revision success feedback.
+
+A custom `useSurahs` hook allows screens to access and update this shared state without passing data through multiple component levels.
 
 ### `data/`
 
@@ -136,6 +146,22 @@ Mastery status is currently limited to:
 
 ## Key Engineering Decisions
 
+### Unsaved Revision Protection
+
+The review screen protects meaningful unsaved revision progress from accidental navigation.
+
+- Opening a review and leaving immediately does not trigger a warning.
+- Once the user finishes the revision, the session is considered to have unsaved progress.
+- Attempting to leave at this point shows a native confirmation alert.
+- Saving the revision allows navigation to continue without a warning.
+- The same behaviour applies to the Android hardware back action.
+
+### Invalid Review Routes
+
+Invalid review route IDs are handled gracefully instead of causing the screen to crash.
+
+A reusable `NotFoundState` component displays a consistent missing-content state while preserving normal back navigation.
+
 ### Shared Surah State
 
 Surah data is managed through `SurahsContext` so that the home screen and revision session share the same source of truth.
@@ -153,6 +179,8 @@ The home screen displays the message and uses `useEffect` with a timer cleanup t
 ### Mock Data First
 
 The POC uses mock data instead of Firebase so that development can focus on React Native concepts and the mobile revision experience before introducing backend complexity.
+
+Changes to Surah mastery are currently stored only in memory. Reloading or restarting the application resets the data to the values defined in `mockSurahs.ts`.
 
 ### Reusable Components
 
@@ -228,9 +256,11 @@ Arabic and RTL support are planned as a later enhancement.
 
 ## Current Scope
 
-The current POC focuses on a complete core revision flow, from selecting a Surah through completing a revision session and rating the result.
+The core Version 1 revision journey is complete using in-memory shared state.
 
-The core Version 1 revision journey is now functional using in-memory shared state. The remaining Version 1 work focuses on testing and UI polish before introducing persistence and more advanced revision scheduling.
+The revision flow has been tested across saving, unsaved-progress protection, invalid routes, and Android hardware back navigation.
+
+Future versions can introduce persistence, more advanced revision scheduling, and additional product features.
 
 The POC intentionally does not yet include:
 
@@ -242,7 +272,7 @@ The POC intentionally does not yet include:
 - Analytics and progress charts
 - Arabic and RTL localisation
 
-These features can be introduced after the core mobile revision flow is complete.
+These features can be introduced after the core mobile revision flow.
 
 ## Development Principles
 

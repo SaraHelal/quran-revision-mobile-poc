@@ -11,7 +11,7 @@ The mobile POC explores how users can quickly see the Surahs due for revision, u
 
 ## Version 1 — Core Revision Flow
 
-**Status:** In progress
+**Status:** Completed
 
 - [x] Set up React Native with Expo and TypeScript
 - [x] Create a clean project structure
@@ -39,7 +39,13 @@ The mobile POC explores how users can quickly see the Surahs due for revision, u
 - [x] Display revision success feedback on the home screen
 - [x] Include the revised Surah name in the success message
 - [x] Hide success feedback automatically after three seconds
-- [ ] Test and polish the complete Version 1 flow
+- [x] Test and polish the complete Version 1 flow
+  - [x] Protect revision sessions from accidental back navigation when progress is unsaved
+  - [x] Allow normal back navigation when no revision progress exists
+  - [x] Allow navigation after a revision is saved without showing a warning
+  - [x] Handle invalid review route IDs with a reusable not-found state
+  - [x] Verify Android hardware back behaviour
+  - [x] Run lint and resolve all errors and warnings
 
 ## Version 2 — Revision Scheduling and Persistence
 
