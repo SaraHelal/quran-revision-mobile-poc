@@ -1,13 +1,20 @@
-import SurahCard from "@/components/SurahCard";
+import ManualSurahList from "@/components/ManualSurahList";
+import ReviewModeTabs from "@/components/ReviewModeTabs";
+import SuggestedSurahList from "@/components/SuggestedSurahList";
 import { useSurahs } from "@/context/SurahsContext";
+import type { ReviewMode } from "@/types";
+import { isReviewDue } from "@/utils/reviewSchedule";
 import { router, Stack } from "expo-router";
-import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
+  const [reviewMode, setReviewMode] = useState<ReviewMode>("suggested");
   const { surahs, successMsg, setSuccessMsg } = useSurahs();
-
+  const dueSurahs = surahs.filter((surah) => {
+    return isReviewDue(surah.nextReviewDate);
+  });
   const handleRevision = (id: number) => {
     router.push({
       pathname: "/review/[id]",
@@ -25,7 +32,6 @@ export default function Index() {
       clearTimeout(timer);
     };
   }, [successMsg, setSuccessMsg]);
-
   return (
     <>
       <Stack.Screen
@@ -49,32 +55,30 @@ export default function Index() {
             <Text style={styles.successMessageText}>{successMsg}</Text>
           </View>
         )}
-        <FlatList
-          keyExtractor={(item) => String(item.id)}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          style={styles.cards}
-          data={surahs}
-          renderItem={({ item }) => (
-            <SurahCard
-              surahName={item.surahName}
-              surahNumber={item.surahNumber}
-              status={item.status}
-              onPress={() => handleRevision(item.id)}
+        <View style={styles.main}>
+          <ReviewModeTabs
+            reviewMode={reviewMode}
+            onReviewModeChange={setReviewMode}
+          />
+          {reviewMode === "suggested" ? (
+            <SuggestedSurahList
+              surahs={dueSurahs}
+              onStartReview={handleRevision}
             />
+          ) : (
+            <ManualSurahList surahs={surahs} onStartReview={handleRevision} />
           )}
-        />
+        </View>
       </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  separator: {
-    height: 12,
-  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: "#F4F7F2",
   },
   header: {
     backgroundColor: "#009768",
@@ -100,10 +104,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginTop: 8,
   },
-  cards: {
-    flex: 1,
-    marginTop: 20,
-  },
   successMessage: {
     marginTop: 16,
     padding: 14,
@@ -115,5 +115,12 @@ const styles = StyleSheet.create({
     color: "#047857",
     fontWeight: "600",
     textAlign: "center",
+  },
+  main: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    marginVertical: 15,
+    padding: 10,
+    borderRadius: 12,
   },
 });

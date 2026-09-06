@@ -19,7 +19,7 @@ export default function ReviewScreen() {
   const { id } = useLocalSearchParams();
   const surahId = Number(id);
   const navigation = useNavigation();
-  const { surahs, setSurahs, setSuccessMsg } = useSurahs();
+  const { surahs, saveRevision, setSuccessMsg } = useSurahs();
   const [isRevisionFinished, setIsRevisionFinished] = useState(false);
   const [isRevisionSaved, setIsRevisionSaved] = useState(false);
   const [selectedResult, setSelectedResult] = useState<MasteryStatus | null>(
@@ -34,14 +34,7 @@ export default function ReviewScreen() {
 
   const handleSaveRevision = (updatedStatus: MasteryStatus) => {
     if (!surah) return;
-    setSurahs((prevSurahs) =>
-      prevSurahs.map((prevSurah) => {
-        if (prevSurah.id === surahId) {
-          return { ...prevSurah, status: updatedStatus };
-        }
-        return prevSurah;
-      }),
-    );
+    saveRevision(surah.id, updatedStatus);
     setSuccessMsg(`${surah.surahName} revision saved successfully`);
     setIsRevisionSaved(true);
   };
