@@ -7,6 +7,7 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Weak",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-01T10:00:00.000Z",
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Good",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-02T10:00:00.000Z",
   },
   {
     id: 3,
@@ -21,6 +23,7 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Excellent",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-03T10:00:00.000Z",
   },
   {
     id: 4,
@@ -28,6 +31,7 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Weak",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-04T10:00:00.000Z",
   },
   {
     id: 5,
@@ -35,6 +39,7 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Good",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-05T10:00:00.000Z",
   },
   {
     id: 6,
@@ -42,5 +47,14 @@ export const mockMemorizationRecords: MemorizationRecord[] = [
     status: "Excellent",
     lastReviewDate: null,
     nextReviewDate: null,
+    createdAt: "2026-09-06T10:00:00.000Z",
+  },
+  {
+    id: 7,
+    surahNumber: 2,
+    status: "Excellent",
+    lastReviewDate: null,
+    nextReviewDate: null,
+    createdAt: "2026-09-07T10:00:00.000Z",
   },
 ];

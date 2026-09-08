@@ -15,6 +15,7 @@ export type MemorizationRecord = {
   status: MasteryStatus;
   lastReviewDate: string | null;
   nextReviewDate: string | null;
+  createdAt: string;
 };
 
 export type MemorizedSurah = SurahMetadata & MemorizationRecord;
