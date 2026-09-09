@@ -1,47 +1,42 @@
 # Quran Revision Mobile POC
 
-A React Native proof of concept for a focused Quran revision experience.
+A mobile-first Quran revision application built with React Native, Expo, and TypeScript.
 
-The app helps users identify Surahs that are due for revision, see their current mastery level, start a revision session, revise from memory, and rate the result.
-
-This project is a mobile exploration of the broader Quran Revision App concept. It keeps the initial scope intentionally focused on the core revision journey while adapting the existing web experience for mobile.
+The app helps users identify memorised Surahs that are due, choose another Surah manually, complete a revision session, rate the result, and automatically schedule the next review.
 
 ## Current Status
 
-**Version 1 — Core Revision Flow is complete.**
+**Version 2 — Scheduling and Review Discovery is complete.**
 
-The current implementation includes:
+The application currently provides a complete in-memory revision experience. Version 3 will add Surah management, local persistence, revision history, progress insights, and an installable Android build.
 
-- Today's Revision home screen
-- Mobile-first revision list
-- Reusable Surah cards
-- Weak, Good, and Excellent mastery states
-- Shared mastery status styling
-- Scrollable revision list using `FlatList`
-- Dynamic revision session routes using Expo Router
-- Dedicated revision session screen
-- Revision guidance before rating
-- Progressive revision flow
-- Weak, Good, and Excellent result selection
-- Reusable primary and secondary buttons
-- TypeScript domain models
-- Mock revision data
-- Mobile UI inspired by the Quran Revision web application
-- Shared Surah state using React Context
-- Custom `useSurahs` hook for accessing revision state
-- Revision result saving
-- Immediate mastery status updates on the home screen
-- Success feedback containing the revised Surah name
-- Automatic success message dismissal after three seconds
-- Protection against accidentally leaving a revision with unsaved progress
-- Native confirmation before discarding unsaved revision progress
-- Android hardware back protection
-- Graceful handling of invalid review route IDs
-- Reusable not-found state
+## Completed Features
 
-The complete Version 1 revision flow is functional and has been tested using shared in-memory state.
+- Suggested and manual review modes
+- Spaced review intervals based on mastery
+- Due Today and Overdue review timing
+- Overdue-first suggestion ordering
+- Manual Surah search
+- Juz filtering with dynamic options
+- Latest Added and Weakest First sorting
+- Matching-result count and empty states
+- Full static Surah catalogue with Juz metadata
+- Separate catalogue and user memorisation records
+- Revision sessions with Weak, Good, and Excellent results
+- Automatic next-review scheduling
+- Shared state using React Context
+- Success feedback after saving
+- Protection against losing unsaved revision progress
+- Graceful handling of invalid review routes
+- Reusable cards, buttons, modal, and state components
 
-Persistent storage is intentionally outside the Version 1 scope. Reloading or restarting the application currently resets Surah data to the mock values.
+## Review Schedule
+
+| Result | Next review |
+|---|---:|
+| Weak | 1 day |
+| Good | 3 days |
+| Excellent | 7 days |
 
 ## Tech Stack
 
@@ -55,107 +50,52 @@ Persistent storage is intentionally outside the Version 1 scope. Reloading or re
 ## Project Structure
 
 ```text
-app/
-  _layout.tsx
-  index.tsx
-  review/
-    [id].tsx
-
-components/
-  NotFoundState.tsx
-  PrimaryButton.tsx
-  SecondaryButton.tsx
-  SessionSurahInfo.tsx
-  SurahCard.tsx
-  SurahSummary.tsx
-
-constants/
-  masteryStyles.ts
-
-context/
-  SurahsContext.tsx
-
-data/
-  mockSurahs.ts
-
-types/
-  index.ts
-
-docs/
-  ROADMAP.md
-  PROJECT_CONTEXT.md
+app/                         Screens and file-based routes
+components/                  Reusable interface components
+constants/                   Shared presentation constants
+context/                     Shared application state and actions
+data/surahCatalog.ts         Static Quran metadata
+data/mockMemorizationRecords.ts
+                              Temporary user data
+types/                       Shared TypeScript domain types
+utils/                       Scheduling and data-building utilities
+docs/                        Architecture and roadmap documentation
 ```
 
-## Core Revision Flow
+## Data Design
 
-The current mobile experience follows this flow:
+Static Quran metadata and user-specific revision data are stored separately.
+
+- `SurahMetadata` contains names, Surah number, and Juz membership.
+- `MemorizationRecord` contains mastery and review dates.
+- `buildMemorizedSurahs` joins them by Surah number for presentation.
+
+This keeps the source of truth clear and prepares the application for persistent storage without duplicating catalogue data.
+
+## Core Flow
 
 1. Open Today's Revision.
-2. View Surahs that are due for revision.
-3. See the current mastery status for each Surah.
-4. Select Start Revision.
-5. Open a dedicated revision session.
-6. Revise the Surah from memory.
-7. Select Finish Revision.
-8. Rate the revision as Weak, Good, or Excellent.
-9. Save the revision result.
-10. Return automatically to Today's Revision.
-11. See the updated mastery status immediately.
-12. Receive a success message confirming which Surah was updated.
+2. Review a suggested Surah or choose one manually.
+3. Revise the Surah from memory.
+4. Finish the session and select a mastery result.
+5. Save the result.
+6. Return to the home screen with an updated schedule and confirmation message.
 
-If the user attempts to leave after finishing a revision but before saving the result, the app displays a confirmation alert before discarding the unsaved progress.
+## Current Limitation
 
-## UI and Product Direction
+User records are still held in memory. Reloading or restarting the application restores the mock records. Version 3 will replace this behaviour with local persistent storage.
 
-The mobile POC is based on the same product concept as the Quran Revision web application.
+## Version 3 Direction
 
-The two experiences share a visual language that includes:
+Version 3 focuses on making the application usable by external testers:
 
-- Green primary branding
-- Soft green revision cards
-- Consistent mastery status colours
-- Rounded interface elements
-- Clear revision-focused information hierarchy
+- Add and remove memorised Surahs
+- Persist data locally with AsyncStorage
+- Record revision history
+- Display focused progress analytics
+- Create an installable Android build
 
-The React Native version is not intended to be a direct copy of the web interface. Navigation, spacing, hierarchy, and interactions are adapted for a mobile experience.
-
-The initial POC uses English for a straightforward technical demonstration. Arabic and RTL support are planned for a later version.
-
-## Development Approach
-
-The project is being developed incrementally.
-
-Version 1 intentionally uses mock data and in-memory state instead of backend infrastructure so development can focus on:
-
-- React Native fundamentals
-- Mobile UI and interaction
-- Component composition
-- Reusable UI components
-- Type-safe domain data
-- Navigation
-- Shared application state
-- A clear end-to-end revision workflow
-- Defensive navigation and error states
-
-Backend infrastructure and persistence can be introduced in a later version without expanding the initial POC unnecessarily.
-
-## Version 1 Testing
-
-The core Version 1 flow has been manually tested for:
-
-- Starting a revision session
-- Revealing rating options after finishing a revision
-- Selecting and saving a mastery result
-- Reflecting the updated mastery status on the home screen
-- Displaying and automatically dismissing success feedback
-- Leaving a revision before any meaningful progress without a warning
-- Protecting unsaved revision progress with a confirmation alert
-- Leaving without saving while preserving the previous mastery status
-- Returning normally after a successful save
-- Android hardware back behaviour
-- Invalid review route IDs
-- Reload behaviour with in-memory mock data
-- Lint validation with no remaining errors or warnings
+Firebase authentication and cloud synchronisation are intentionally deferred until the product requires accounts or multi-device access.
 
 ## Getting Started
 
@@ -165,36 +105,19 @@ Install dependencies:
 npm install
 ```
 
-Start the Expo development server:
+Start Expo:
 
 ```bash
 npx expo start
 ```
 
-The app can then be opened using Expo Go on a compatible physical device.
+Open the project with a compatible Expo Go application or Android development environment.
 
 ## Documentation
 
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — development progress and planned versions
-- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, scope, user flow, and engineering decisions
-
-## Future Direction
-
-Potential future development includes:
-
-- Persistent user data
-- Firebase Authentication
-- Cloud Firestore integration
-- Spaced revision scheduling
-- Next review dates
-- Revision history
-- Progress statistics and analytics
-- Arabic localisation
-- RTL support
-- Synchronisation with the Quran Revision web application
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — completed versions and the Version 3 delivery plan
+- [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md) — architecture, data model, user flows, and engineering decisions
 
 ## Related Project
 
-This repository is a focused mobile proof of concept based on the broader Quran Revision App.
-
-The web application contains a more complete memorisation management and revision scheduling workflow.
+This repository is the mobile implementation of the broader Quran Revision product concept. A separate web version uses React, TypeScript, Firebase Authentication, and Cloud Firestore.

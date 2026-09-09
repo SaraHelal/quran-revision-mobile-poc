@@ -1,25 +1,13 @@
 # Quran Revision Mobile POC — Project Context
 
-**Last updated:** 2 September 2026
+**Last updated:** 9 September 2026  
+**Current status:** Version 2 completed; Version 3 planned
 
 ## Overview
 
-Quran Revision Mobile POC is a React Native proof of concept for a mobile Quran revision experience.
+Quran Revision Mobile POC is a React Native and Expo application for organising Quran revision. It helps users see which memorised Surahs are due, choose another Surah manually, complete a revision session, rate the result, and automatically schedule the next review.
 
-The project explores a focused revision workflow where users can see the Surahs that need revision, understand their current mastery level, start a revision session, revise from memory, and rate the result.
-
-This repository is intentionally smaller in scope than the full Quran Revision web application while keeping a similar product identity and revision experience.
-
-## Purpose
-
-The main goals of this POC are to:
-
-- Explore React Native development using an existing product idea
-- Design a focused mobile-first Quran revision experience
-- Build reusable and typed React Native components
-- Demonstrate an end-to-end revision flow
-- Keep the mobile experience visually connected to the Quran Revision web application
-- Keep the architecture simple enough to iterate quickly
+The project is intended both as a useful mobile product and as a portfolio project demonstrating React Native, TypeScript, product thinking, reusable UI, domain modelling, navigation, and state management.
 
 ## Technology Stack
 
@@ -27,8 +15,9 @@ The main goals of this POC are to:
 - Expo
 - TypeScript
 - Expo Router
+- React Context
 - React Native `StyleSheet`
-- Mock data during the initial POC
+- In-memory mock records during Versions 1 and 2
 
 ## Current Architecture
 
@@ -40,10 +29,14 @@ app/
     [id].tsx
 
 components/
+  AppModal.tsx
+  ManualSurahList.tsx
   NotFoundState.tsx
   PrimaryButton.tsx
+  ReviewModeTabs.tsx
   SecondaryButton.tsx
   SessionSurahInfo.tsx
+  SuggestedSurahList.tsx
   SurahCard.tsx
   SurahSummary.tsx
 
@@ -54,234 +47,132 @@ context/
   SurahsContext.tsx
 
 data/
-  mockSurahs.ts
+  mockMemorizationRecords.ts
+  surahCatalog.ts
 
 types/
   index.ts
 
+utils/
+  buildMemorizedSurahs.ts
+  reviewSchedule.ts
+
 docs/
-  ROADMAP.md
   PROJECT_CONTEXT.md
+  ROADMAP.md
 ```
 
-### `app/`
+## Data Model
 
-Contains application screens and routing.
+The data is deliberately separated into two concerns.
 
-`index.tsx` displays the Today's Revision screen.
+### Surah metadata
 
-`review/[id].tsx` is a dynamic route used for individual revision sessions.
+`SurahMetadata` represents facts that do not belong to a specific user:
 
-### `components/`
+- Surah number
+- English name
+- Arabic name
+- Juz numbers
 
-Contains reusable UI components.
+The complete static catalogue is stored in `data/surahCatalog.ts`.
 
-Current shared components include:
+### User memorisation record
 
-- `SurahCard` for displaying a Surah in the revision list
-- `SurahSummary` for reusable Surah information inside list cards
-- `SessionSurahInfo` for highlighting the active Surah during a revision session
-- `PrimaryButton` for primary actions such as finishing a revision
-- `SecondaryButton` for secondary actions such as starting a revision
-- `NotFoundState` for displaying reusable missing-content and invalid-route states
+`MemorizationRecord` represents user-specific state:
 
-### `constants/`
+- Record ID
+- Surah number
+- Mastery status
+- Last review date
+- Next review date
+- Creation date
 
-Contains shared UI and domain constants.
+`buildMemorizedSurahs` joins memorisation records with catalogue metadata by `surahNumber`. The resulting `MemorizedSurah` objects are consumed by the interface.
 
-`masteryStyles.ts` defines the colours used for Weak, Good, and Excellent mastery states so that they remain visually consistent throughout the application.
+This structure avoids duplicating names and Juz metadata inside every user record and prepares the application for persistent storage.
 
-### `context/`
+## Current User Experience
 
-Contains shared application state.
+### Suggested mode
 
-`SurahsContext.tsx` owns the current in-memory Surah data and revision success feedback.
+- Shows only Surahs currently due for revision.
+- Displays an empty state when no reviews are due.
+- Marks overdue items without adding redundant labels to items due today.
+- Places overdue items before items due today.
+- Starts a revision session from the selected Surah card.
 
-A custom `useSurahs` hook allows screens to access and update this shared state without passing data through multiple component levels.
+### Manual mode
 
-### `data/`
+- Shows all currently memorised Surahs, including those not yet due.
+- Searches Surah names using normalised, case-insensitive text.
+- Filters Surahs by Juz.
+- Generates available Juz options from the user's current Surahs.
+- Sorts results by Latest Added or Weakest First.
+- Shows the current number of matching Surahs.
 
-Contains temporary mock data used while developing the POC without a backend.
+### Revision session
 
-### `types/`
+1. The user opens a Surah from either review mode.
+2. The app displays revision guidance.
+3. The user finishes the revision and chooses Weak, Good, or Excellent.
+4. The shared context saves the result.
+5. The app records the review time and calculates the next review date.
+6. The user returns to the home screen and receives success feedback.
 
-Contains shared TypeScript domain types such as `Surah` and `MasteryStatus`.
+## Review Scheduling Rules
 
-### `docs/`
+| Result | Next review |
+|---|---:|
+| Weak | 1 day |
+| Good | 3 days |
+| Excellent | 7 days |
 
-Contains project documentation, development plans, architecture decisions, and project context.
+A Surah is due when its next review date is today or earlier. A missing next review date is currently treated as due today so initial mock records remain reviewable.
 
-## Current Data Model
+## Shared State
 
-A Surah used by the revision UI currently contains:
+`SurahsContext` owns the memorisation records and exposes the derived memorised Surahs to the screens.
 
-- `id`
-- `surahName`
-- `surahNumber`
-- `status`
-
-Mastery status is currently limited to:
-
-- `Weak`
-- `Good`
-- `Excellent`
-
-## Current User Flow
-
-1. The user opens Today's Revision.
-2. The app displays Surahs due for revision.
-3. Each Surah displays its current mastery status.
-4. The user selects Start Revision.
-5. Expo Router navigates to a dedicated revision session using the Surah ID.
-6. The active Surah and its current mastery status are displayed.
-7. The user is prompted to revise the Surah from memory.
-8. The user selects Finish Revision after completing the revision.
-9. Weak, Good, and Excellent rating options are revealed.
-10. The user selects a revision result.
-11. The selected mastery status is saved to shared application state.
-12. The app returns to the home screen.
-13. The updated mastery status is immediately reflected in the Surah card.
-14. A success message containing the Surah name is displayed.
-15. The success message disappears automatically after three seconds.
+Revision updates are performed through a domain action exposed by the context rather than exposing the internal state setter. This keeps screens independent from the context's storage implementation and will make the move to AsyncStorage easier in Version 3.
 
 ## Key Engineering Decisions
 
-### Unsaved Revision Protection
+### Static catalogue and user records are separate
 
-The review screen protects meaningful unsaved revision progress from accidental navigation.
+Surah names, numbers, Arabic names, and Juz membership belong to the catalogue. Mastery and review dates belong to the user. They are joined only when the UI needs complete objects.
 
-- Opening a review and leaving immediately does not trigger a warning.
-- Once the user finishes the revision, the session is considered to have unsaved progress.
-- Attempting to leave at this point shows a native confirmation alert.
-- Saving the revision allows navigation to continue without a warning.
-- The same behaviour applies to the Android hardware back action.
+### Derived data is not stored twice
 
-### Invalid Review Routes
+`MemorizedSurah[]` is rebuilt from the current records and static catalogue. It is not maintained as a second independent source of truth.
 
-Invalid review route IDs are handled gracefully instead of causing the screen to crash.
+### Suggested and manual lists are separate components
 
-A reusable `NotFoundState` component displays a consistent missing-content state while preserving normal back navigation.
+The two modes share Surah cards but have different responsibilities. Suggested mode focuses on scheduling priority; manual mode owns search, Juz filtering, and sorting.
 
-### Shared Surah State
+### Reusable modal behaviour
 
-Surah data is managed through `SurahsContext` so that the home screen and revision session share the same source of truth.
+`AppModal` centralises the overlay, close button, Android back handling, backdrop dismissal, and content container. Feature components provide only their modal content and selection callbacks.
 
-The provider owns the Surah state, while a custom `useSurahs` hook gives screens access to the shared data and update functions.
+### Navigation protection
 
-This allows a revision result saved from the revision screen to be immediately reflected on the home screen without passing state through route parameters.
+After a revision is finished but before it is saved, leaving the session displays a confirmation alert. Normal navigation is allowed before meaningful progress or after a successful save.
 
-### Temporary Success Feedback
+### Local persistence before Firebase
 
-Revision success feedback is stored in shared context because the revision screen navigates back to the home screen immediately after saving.
+Version 3 will use AsyncStorage first because the initial product is single-user and should work offline. Firebase remains a later option for authentication, backup, and multi-device synchronisation.
 
-The home screen displays the message and uses `useEffect` with a timer cleanup to remove it automatically after three seconds.
+## Current Limitations
 
-### Mock Data First
+- Data resets when the application reloads or restarts.
+- Users cannot yet add or remove memorised Surahs.
+- Revision sessions do not yet create persistent history entries.
+- Progress analytics are not yet available.
+- The application has not yet been packaged for external testers.
+- The interface is English-only.
 
-The POC uses mock data instead of Firebase so that development can focus on React Native concepts and the mobile revision experience before introducing backend complexity.
+## Next Milestone
 
-Changes to Surah mastery are currently stored only in memory. Reloading or restarting the application resets the data to the values defined in `mockSurahs.ts`.
+Version 3 will turn the proof of concept into a locally persistent application that another person can configure and use. Development begins with the Add a Surah experience, followed by AsyncStorage, revision history, focused progress insights, and an installable Android build.
 
-### Reusable Components
-
-Repeated interface elements are extracted into focused reusable components instead of duplicating UI between screens.
-
-Screen components remain responsible for page-level layout and behaviour, while reusable components handle their own presentation and interaction.
-
-### Separate List and Session Presentation
-
-The Surah list and revision session have different visual requirements.
-
-`SurahSummary` is designed for compact Surah information inside list cards, while `SessionSurahInfo` gives the active Surah stronger visual hierarchy during a revision session.
-
-This avoids forcing a single component to support unrelated layouts.
-
-### Reusable Button Components
-
-Primary and secondary actions use separate reusable button components.
-
-`PrimaryButton` represents the main action in a flow, while `SecondaryButton` is used for less prominent actions such as starting a revision from a Surah card.
-
-The components are intentionally kept simple while the design system remains small.
-
-### Shared Mastery Styling
-
-Weak, Good, and Excellent colours are defined centrally in `constants/masteryStyles.ts`.
-
-This avoids duplicating colour definitions and keeps mastery states visually consistent across the home screen and revision session.
-
-### FlatList for Revision Items
-
-The revision list uses React Native's `FlatList`, making the implementation suitable for larger and scrollable collections.
-
-Stable IDs are used as list keys, and item separators control spacing between Surah cards.
-
-### File-Based Navigation
-
-Expo Router provides file-based navigation.
-
-The dynamic route:
-
-```text
-review/[id].tsx
-```
-
-allows each revision session to receive the selected Surah ID and load the appropriate Surah from the current data source.
-
-### Progressive Revision Flow
-
-Rating options are not displayed immediately when a revision session begins.
-
-The user first revises the Surah and selects Finish Revision. The Weak, Good, and Excellent rating options are then revealed.
-
-This keeps the interface focused on the current step of the revision process.
-
-### Mobile and Web Product Consistency
-
-The mobile POC follows the visual language of the Quran Revision web application, including:
-
-- Green primary branding
-- Soft green Surah cards
-- Consistent mastery colours
-- Rounded interface elements
-- Clear revision-focused information hierarchy
-
-The mobile interface is not intended to be a pixel-for-pixel copy of the web application. Layout and navigation are adapted to common mobile interaction patterns.
-
-### English-First POC
-
-The initial POC interface is in English to keep the technical demonstration and interview discussion straightforward.
-
-Arabic and RTL support are planned as a later enhancement.
-
-## Current Scope
-
-The core Version 1 revision journey is complete using in-memory shared state.
-
-The revision flow has been tested across saving, unsaved-progress protection, invalid routes, and Android hardware back navigation.
-
-Future versions can introduce persistence, more advanced revision scheduling, and additional product features.
-
-The POC intentionally does not yet include:
-
-- Authentication
-- Firebase / Firestore
-- Cloud synchronisation
-- Persistent revision history
-- Production-level spaced revision scheduling
-- Analytics and progress charts
-- Arabic and RTL localisation
-
-These features can be introduced after the core mobile revision flow.
-
-## Development Principles
-
-- Build features incrementally
-- Understand each React Native concept before adding complexity
-- Keep components small and focused
-- Extract reusable UI only when there is a clear reuse case
-- Use TypeScript for clear data contracts
-- Keep Version 1 focused on the complete core revision journey
-- Keep mobile and web experiences visually connected
-- Avoid unnecessary backend complexity during the POC stage
-- Avoid premature abstraction and overengineering
+See `docs/ROADMAP.md` for the phased Version 3 plan.

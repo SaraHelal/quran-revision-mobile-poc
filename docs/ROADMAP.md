@@ -1,80 +1,108 @@
 # Quran Revision Mobile POC — Roadmap
 
-**Last updated:** 30 August 2026  
-**Status:** In development
+**Last updated:** 9 September 2026  
+**Current status:** Version 2 completed
 
 ## Project Goal
 
-Build a focused React Native proof of concept for a Quran revision experience.
-
-The mobile POC explores how users can quickly see the Surahs due for revision, understand their current mastery level, and start a revision session from a simple mobile-first interface.
+Build a focused mobile Quran revision application that helps users organise memorised Surahs, identify what is due, complete revision sessions, and understand their progress.
 
 ## Version 1 — Core Revision Flow
 
 **Status:** Completed
 
 - [x] Set up React Native with Expo and TypeScript
-- [x] Create a clean project structure
 - [x] Build the Today's Revision screen
-- [x] Create a reusable `SurahCard` component
-- [x] Define `Surah` and `MasteryStatus` types
-- [x] Add mock revision data
-- [x] Display mastery status dynamically
-- [x] Render Surahs using `FlatList`
-- [x] Add stable list keys and item separators
-- [x] Support scrolling while keeping the screen header visible
-- [x] Make the Start Revision action interactive
-- [x] Add navigation to a revision session
-- [x] Build the revision session screen
-- [x] Add a dedicated session Surah summary
-- [x] Add revision guidance before rating
-- [x] Add Weak, Good, and Excellent result options
-- [x] Reveal rating options after finishing the revision
-- [x] Create reusable primary and secondary button components
-- [x] Add shared mastery styling
-- [x] Align the mobile UI with the web application's visual language
-- [x] Save the selected revision result
-- [x] Reflect the updated mastery status on the home screen
-- [x] Share Surah state between screens using React Context
-- [x] Display revision success feedback on the home screen
-- [x] Include the revised Surah name in the success message
-- [x] Hide success feedback automatically after three seconds
-- [x] Test and polish the complete Version 1 flow
-  - [x] Protect revision sessions from accidental back navigation when progress is unsaved
-  - [x] Allow normal back navigation when no revision progress exists
-  - [x] Allow navigation after a revision is saved without showing a warning
-  - [x] Handle invalid review route IDs with a reusable not-found state
-  - [x] Verify Android hardware back behaviour
-  - [x] Run lint and resolve all errors and warnings
+- [x] Display Surahs with reusable cards and mastery states
+- [x] Add file-based navigation with Expo Router
+- [x] Build the revision session flow
+- [x] Let users rate a revision as Weak, Good, or Excellent
+- [x] Save session results to shared in-memory state
+- [x] Display success feedback after saving
+- [x] Protect unsaved revision progress
+- [x] Handle invalid review routes gracefully
 
-## Version 2 — Revision Scheduling and Persistence
+## Version 2 — Scheduling and Review Discovery
+
+**Status:** Completed
+
+- [x] Separate the static Surah catalogue from user memorisation records
+- [x] Build complete memorised Surah objects from catalogue metadata and user records
+- [x] Add Juz metadata to the Surah catalogue
+- [x] Calculate the next review date from the mastery result
+- [x] Identify Surahs that are due for revision
+- [x] Distinguish between reviews due today and overdue reviews
+- [x] Prioritise overdue Surahs in the suggested list
+- [x] Add Suggested and Choose a Surah review modes
+- [x] Add an empty state when no reviews are due
+- [x] Add manual Surah search with normalised matching
+- [x] Add Juz filtering with dynamically generated options
+- [x] Add Latest Added and Weakest First sorting
+- [x] Show the number of matching Surahs
+- [x] Create a reusable application modal
+- [x] Polish the mobile interface and compact tab labels
+- [x] Move revision-saving logic into shared context
+
+## Version 3 — Product-Ready Local Experience
 
 **Status:** Planned
 
-- [ ] Calculate and display the next review date
-- [ ] Add persistent revision data
-- [ ] Add empty and completion states
-- [ ] Improve revision feedback
-- [ ] Add Arabic and RTL support
-- [ ] Polish the UI for a mobile demo
+### Phase 1 — Manage Memorised Surahs
 
-## Future Ideas
+- [ ] Browse the full Surah catalogue
+- [ ] Add a Surah to the user's memorised list
+- [ ] Prevent duplicate memorisation records
+- [ ] Remove a Surah with confirmation
+- [ ] Display clear success, error, loading, and empty states
 
-These features are intentionally outside the initial POC scope:
+### Phase 2 — Local Persistence
 
-- Firebase Authentication
-- Cloud Firestore integration
-- Persistent user data
-- Full spaced-revision scheduling
-- Revision history
-- Progress statistics and analytics
-- Synchronisation with the web application
+- [ ] Introduce a storage service instead of accessing storage from UI components
+- [ ] Persist memorisation records using AsyncStorage
+- [ ] Restore records when the application starts
+- [ ] Persist changes made after revision sessions
+- [ ] Handle loading and storage failure states
+
+### Phase 3 — Revision History
+
+- [ ] Define a revision-history data model
+- [ ] Create one history entry for every saved revision
+- [ ] Persist revision history locally
+- [ ] Display recent revision activity
+
+### Phase 4 — Progress Insights
+
+- [ ] Display weekly revision totals
+- [ ] Display the distribution of Weak, Good, and Excellent Surahs
+- [ ] Add one focused progress screen rather than a large dashboard
+
+### Phase 5 — Release Preparation
+
+- [ ] Test the complete flow on a physical Android device
+- [ ] Review accessibility and small-screen layouts
+- [ ] Add an application icon and launch screen
+- [ ] Create an installable Android build using EAS Build
+- [ ] Share the build with external testers
+- [ ] Add setup instructions and portfolio screenshots
+
+## Later Versions
+
+The following ideas are intentionally outside Version 3:
+
+- User accounts and cloud synchronisation with Firebase
+- Synchronisation with the Quran Revision web application
+- Arabic localisation and RTL support
+- Snoozing or deferring a suggested revision
+- Configurable daily suggestion limits
+- Audio recording and playback for self-assessed recitation
+- Quran-specific speech recognition and automatic mistake detection
 
 ## Development Principles
 
-- Build features incrementally
-- Understand each React Native concept before adding complexity
-- Keep components small and reusable
-- Use TypeScript for clear data contracts
-- Keep Version 1 focused on the core revision journey
-- Avoid unnecessary backend complexity during the POC stage
+- Deliver one complete user outcome at a time
+- Prefer visible product milestones over prolonged UI polishing
+- Keep components focused and reusable
+- Keep domain logic outside presentation components
+- Use TypeScript to make data contracts explicit
+- Add backend complexity only when the product requires it
+- Test behaviour before marking a phase as complete
