@@ -21,8 +21,9 @@ export default function ReviewModeTabs({
             styles.tabTitle,
             reviewMode === "suggested" && styles.activeTabTitle,
           ]}
+          numberOfLines={1}
         >
-          Suggested for You
+          ✨ Suggested
         </Text>
       </Pressable>
       <Pressable
@@ -34,8 +35,9 @@ export default function ReviewModeTabs({
             styles.tabTitle,
             reviewMode === "manual" && styles.activeTabTitle,
           ]}
+          numberOfLines={1}
         >
-          Choose a surah
+          📖 Choose a Surah
         </Text>
       </Pressable>
     </View>

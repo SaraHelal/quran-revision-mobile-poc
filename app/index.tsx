@@ -2,19 +2,28 @@ import ManualSurahList from "@/components/ManualSurahList";
 import ReviewModeTabs from "@/components/ReviewModeTabs";
 import SuggestedSurahList from "@/components/SuggestedSurahList";
 import { useSurahs } from "@/context/SurahsContext";
-import type { ReviewMode } from "@/types";
-import { isReviewDue } from "@/utils/reviewSchedule";
+import type { ReviewMode, ReviewTiming } from "@/types";
+import { getReviewTiming, isReviewDue } from "@/utils/reviewSchedule";
 import { router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const REVIEW_TIMING_PRIORITY: Record<ReviewTiming, number> = {
+  overdue: 0,
+  dueToday: 1,
+};
 export default function Index() {
   const [reviewMode, setReviewMode] = useState<ReviewMode>("suggested");
   const { surahs, successMsg, setSuccessMsg } = useSurahs();
   const dueSurahs = surahs.filter((surah) => {
     return isReviewDue(surah.nextReviewDate);
   });
+  const sortedDueSurahs = [...dueSurahs].sort(
+    (a, b) =>
+      REVIEW_TIMING_PRIORITY[getReviewTiming(a.nextReviewDate)] -
+      REVIEW_TIMING_PRIORITY[getReviewTiming(b.nextReviewDate)],
+  );
   const handleRevision = (id: number) => {
     router.push({
       pathname: "/review/[id]",
@@ -62,7 +71,7 @@ export default function Index() {
           />
           {reviewMode === "suggested" ? (
             <SuggestedSurahList
-              surahs={dueSurahs}
+              surahs={sortedDueSurahs}
               onStartReview={handleRevision}
             />
           ) : (

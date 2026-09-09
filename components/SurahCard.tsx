@@ -1,4 +1,4 @@
-import type { MasteryStatus } from "@/types";
+import type { MasteryStatus, ReviewTiming } from "@/types";
 import { StyleSheet, View } from "react-native";
 import SecondaryButton from "./SecondaryButton";
 import SurahSummary from "./SurahSummary";
@@ -8,12 +8,14 @@ type SurahCardProps = {
   surahNumber: number;
   status: MasteryStatus;
   onPress: () => void;
+  reviewTiming?: ReviewTiming;
 };
 export default function SurahCard({
   surahName,
   surahNumber,
   status,
   onPress,
+  reviewTiming,
 }: SurahCardProps) {
   return (
     <View style={styles.card}>
@@ -21,6 +23,7 @@ export default function SurahCard({
         surahName={surahName}
         surahNumber={surahNumber}
         status={status}
+        reviewTiming={reviewTiming}
       />
       <View style={styles.buttonContainer}>
         <SecondaryButton label="Start Revision" onPress={onPress} showArrow />

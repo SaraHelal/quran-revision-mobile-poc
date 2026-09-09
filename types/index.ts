@@ -2,6 +2,8 @@ export type MasteryStatus = "Weak" | "Good" | "Excellent";
 
 export type ReviewMode = "suggested" | "manual";
 
+export type ReviewTiming = "overdue" | "dueToday";
+
 export type SurahMetadata = {
   readonly surahNumber: number;
   readonly surahName: string;
