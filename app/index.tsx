@@ -6,7 +6,7 @@ import type { ReviewMode, ReviewTiming } from "@/types";
 import { getReviewTiming, isReviewDue } from "@/utils/reviewSchedule";
 import { router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const REVIEW_TIMING_PRIORITY: Record<ReviewTiming, number> = {
@@ -78,6 +78,9 @@ export default function Index() {
             <ManualSurahList surahs={surahs} onStartReview={handleRevision} />
           )}
         </View>
+        <Pressable onPress={() => router.push({ pathname: "/manage-surahs" })}>
+          <Text>Manage Surahs</Text>
+        </Pressable>
       </SafeAreaView>
     </>
   );
