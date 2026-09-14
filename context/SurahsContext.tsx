@@ -3,17 +3,22 @@ import { surahCatalog } from "@/data/surahCatalog";
 import type {
   MasteryStatus,
   MemorizationRecord,
-  MemorizedSurah
+  MemorizedSurah,
 } from "@/types";
 import { buildMemorizedSurahs } from "@/utils/buildMemorizedSurahs";
 import { calculateNextReviewDate } from "@/utils/reviewSchedule";
 import { createContext, useContext, useState } from "react";
-
+type AddSurahInput = {
+  surahNumber: number;
+  status: MasteryStatus;
+  memorizedAt: string;
+};
 type SurahsContextType = {
   surahs: MemorizedSurah[];
   successMsg: string | null;
   setSuccessMsg: React.Dispatch<React.SetStateAction<string | null>>;
   saveRevision: (surahId: number, updatedStatus: MasteryStatus) => void;
+  addSurah: (input: AddSurahInput) => void;
 };
 
 export const SurahsContext = createContext<SurahsContextType | undefined>(
@@ -55,6 +60,32 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
     );
     console.log(surahId, updatedStatus, reviewedAt, nextReviewDate);
   };
+  const addSurah = ({ surahNumber, status, memorizedAt }: AddSurahInput) => {
+    setRecords((previousRecords) => {
+      const alreadyExists = previousRecords.some(
+        (record) => record.surahNumber === surahNumber,
+      );
+
+      if (alreadyExists) {
+        return previousRecords;
+      }
+
+      const nextId =
+        Math.max(0, ...previousRecords.map((record) => record.id)) + 1;
+
+      const newRecord: MemorizationRecord = {
+        id: nextId,
+        surahNumber,
+        status,
+        memorizedAt,
+        lastReviewDate: null,
+        nextReviewDate: null,
+        createdAt: new Date().toISOString(),
+      };
+
+      return [...previousRecords, newRecord];
+    });
+  };
   return (
     <SurahsContext.Provider
       value={{
@@ -62,6 +93,7 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
         successMsg,
         setSuccessMsg,
         saveRevision,
+        addSurah,
       }}
     >
       {children}

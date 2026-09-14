@@ -1,12 +1,29 @@
 import ManageSurahCard from "@/components/ManageSurahCard";
 import PrimaryButton from "@/components/PrimaryButton";
 import { useSurahs } from "@/context/SurahsContext";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ManageSurahsScreen() {
-  const { surahs } = useSurahs();
+  const { surahs, successMsg, setSuccessMsg } = useSurahs();
+  const router = useRouter();
+
+  const sortedSurahs = [...surahs].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  useEffect(() => {
+    if (!successMsg) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      setSuccessMsg(null);
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [successMsg, setSuccessMsg]);
   return (
     <>
       <Stack.Screen
@@ -25,8 +42,16 @@ export default function ManageSurahsScreen() {
           <Text style={styles.title}>My Surahs</Text>
           <Text style={styles.desc}>Manage your memorised Surahs.</Text>
           <View style={styles.main}>
+            {successMsg && (
+              <View style={styles.successMessage}>
+                <Text style={styles.successMessageText}>{successMsg}</Text>
+              </View>
+            )}
             <View style={styles.addButtonContainer}>
-              <PrimaryButton label="+ Add Surah" onPress={() => {}} />
+              <PrimaryButton
+                label="+ Add Surah"
+                onPress={() => router.push("/add-surah")}
+              />
             </View>
             <View style={styles.infoContainer}>
               <View style={styles.counterBox}>
@@ -36,7 +61,7 @@ export default function ManageSurahsScreen() {
               </View>
             </View>
             <FlatList
-              data={surahs}
+              data={sortedSurahs}
               style={styles.cards}
               contentContainerStyle={styles.cardsContent}
               keyExtractor={(item) => item.id.toString()}
@@ -79,6 +104,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   main: {
+    flex: 1,
     gap: 10,
     marginBottom: 10,
     width: "100%",
@@ -108,9 +134,24 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   cards: {
+    flex: 1,
     width: "100%",
   },
   cardsContent: {
     gap: 10,
+    paddingBottom: 20,
+  },
+  successMessage: {
+    width: "100%",
+    backgroundColor: "#ECFDF5",
+    borderWidth: 1,
+    borderColor: "#A7F3D0",
+    borderRadius: 10,
+    padding: 12,
+  },
+  successMessageText: {
+    color: "#007A55",
+    textAlign: "center",
+    fontWeight: "600",
   },
 });

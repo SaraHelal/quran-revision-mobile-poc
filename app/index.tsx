@@ -64,6 +64,7 @@ export default function Index() {
             <Text style={styles.successMessageText}>{successMsg}</Text>
           </View>
         )}
+
         <View style={styles.main}>
           <ReviewModeTabs
             reviewMode={reviewMode}

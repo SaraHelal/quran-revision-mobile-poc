@@ -15,6 +15,7 @@ export type MemorizationRecord = {
   id: number;
   surahNumber: number;
   status: MasteryStatus;
+  memorizedAt: string;
   lastReviewDate: string | null;
   nextReviewDate: string | null;
   createdAt: string;

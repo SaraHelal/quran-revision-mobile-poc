@@ -1,4 +1,5 @@
 import type { MasteryStatus, MemorizedSurah } from "@/types";
+import { normalizeSearchText } from "@/utils/normalizeSearchText";
 import { useState } from "react";
 import {
   FlatList,
@@ -11,7 +12,6 @@ import {
 } from "react-native";
 import AppModal from "./AppModal";
 import SurahCard from "./SurahCard";
-
 type ManualSurahListProps = {
   surahs: MemorizedSurah[];
   onStartReview: (surahId: number) => void;
@@ -47,9 +47,6 @@ export default function ManualSurahList({
     setIsSortModalVisible(false);
   };
 
-  const normalizeSearchText = (text: string): string => {
-    return text.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-  };
   const searchFilteredSurahs = surahs.filter((surah) => {
     const normalizedSurahName = normalizeSearchText(surah.surahName);
     const normalizedQuery = normalizeSearchText(searchQuery);
