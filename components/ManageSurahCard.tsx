@@ -7,12 +7,16 @@ type ManageSurahCardProps = {
   surahNumber: number;
   juzNumbers: readonly number[];
   status: MasteryStatus;
+  onDelete: () => void;
+  onEdit: () => void;
 };
 export default function ManageSurahCard({
   surahName,
   surahNumber,
   status,
   juzNumbers,
+  onEdit,
+  onDelete,
 }: ManageSurahCardProps) {
   const statusStyle = masteryStyles[status];
 
@@ -37,10 +41,10 @@ export default function ManageSurahCard({
       </Text>
       <View style={styles.divider} />
       <View style={styles.actionsRow}>
-        <Pressable style={styles.actionButton} onPress={() => {}}>
+        <Pressable style={styles.actionButton} onPress={onEdit}>
           <Text style={styles.editText}>Edit</Text>
         </Pressable>
-        <Pressable style={styles.actionButton} onPress={() => {}}>
+        <Pressable style={styles.actionButton} onPress={onDelete}>
           <Text style={styles.deleteText}>Delete</Text>
         </Pressable>
       </View>

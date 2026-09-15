@@ -51,7 +51,17 @@ export default function Index() {
 
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.welcome}>👋 Welcome</Text>
+          <View style={styles.headerTopRow}>
+            <Text style={styles.welcome}>👋 Welcome</Text>
+
+            <Pressable
+              style={styles.manageButton}
+              onPress={() => router.push("/manage-surahs")}
+            >
+              <Text style={styles.manageButtonIcon}>📚</Text>
+              <Text style={styles.manageButtonText}>My Surahs</Text>
+            </Pressable>
+          </View>
 
           <Text style={styles.title}>{"Today's Revision"}</Text>
 
@@ -79,9 +89,6 @@ export default function Index() {
             <ManualSurahList surahs={surahs} onStartReview={handleRevision} />
           )}
         </View>
-        <Pressable onPress={() => router.push({ pathname: "/manage-surahs" })}>
-          <Text>Manage Surahs</Text>
-        </Pressable>
       </SafeAreaView>
     </>
   );
@@ -97,6 +104,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#009768",
     borderRadius: 28,
     padding: 24,
+  },
+  headerTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  manageButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.18)",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  manageButtonIcon: {
+    fontSize: 14,
+  },
+  manageButtonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "600",
   },
   welcome: {
     color: "#D1FAE5",

@@ -3,11 +3,11 @@ import PrimaryButton from "@/components/PrimaryButton";
 import { useSurahs } from "@/context/SurahsContext";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ManageSurahsScreen() {
-  const { surahs, successMsg, setSuccessMsg } = useSurahs();
+  const { surahs, successMsg, setSuccessMsg, deleteSurah } = useSurahs();
   const router = useRouter();
 
   const sortedSurahs = [...surahs].sort(
@@ -24,6 +24,26 @@ export default function ManageSurahsScreen() {
 
     return () => clearTimeout(timeoutId);
   }, [successMsg, setSuccessMsg]);
+  const handleDeleteSurah = (surahId: number, surahName: string) => {
+    Alert.alert(
+      "Delete Surah",
+      `Are you sure you want to delete ${surahName}?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            deleteSurah(surahId);
+            setSuccessMsg(`${surahName} was deleted successfully.`);
+          },
+        },
+      ],
+    );
+  };
   return (
     <>
       <Stack.Screen
@@ -71,6 +91,15 @@ export default function ManageSurahsScreen() {
                   surahNumber={item.surahNumber}
                   juzNumbers={item.juzNumbers}
                   status={item.status}
+                  onDelete={() => handleDeleteSurah(item.id, item.surahName)}
+                  onEdit={() =>
+                    router.push({
+                      pathname: "/edit-surah/[id]",
+                      params: {
+                        id: item.id.toString(),
+                      },
+                    })
+                  }
                 />
               )}
             ></FlatList>

@@ -55,4 +55,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 999,
   },
+  badgeText: {
+    fontSize: 15,
+    fontWeight: "500",
+  },
 });

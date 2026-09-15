@@ -13,12 +13,18 @@ type AddSurahInput = {
   status: MasteryStatus;
   memorizedAt: string;
 };
+type UpdateSurahInput = {
+  status: MasteryStatus;
+  memorizedAt: string;
+};
 type SurahsContextType = {
   surahs: MemorizedSurah[];
   successMsg: string | null;
   setSuccessMsg: React.Dispatch<React.SetStateAction<string | null>>;
   saveRevision: (surahId: number, updatedStatus: MasteryStatus) => void;
   addSurah: (input: AddSurahInput) => void;
+  deleteSurah: (surahId: number) => void;
+  updateSurah: (surahId: number, updates: UpdateSurahInput) => void;
 };
 
 export const SurahsContext = createContext<SurahsContextType | undefined>(
@@ -86,6 +92,23 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
       return [...previousRecords, newRecord];
     });
   };
+  const deleteSurah = (surahId: number) => {
+    setRecords((previousRecords) =>
+      previousRecords.filter((record) => record.id !== surahId),
+    );
+  };
+  const updateSurah = (surahId: number, updates: UpdateSurahInput) => {
+    setRecords((previousRecords) =>
+      previousRecords.map((record) =>
+        record.id === surahId
+          ? {
+              ...record,
+              ...updates,
+            }
+          : record,
+      ),
+    );
+  };
   return (
     <SurahsContext.Provider
       value={{
@@ -94,6 +117,8 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
         setSuccessMsg,
         saveRevision,
         addSurah,
+        deleteSurah,
+        updateSurah,
       }}
     >
       {children}
