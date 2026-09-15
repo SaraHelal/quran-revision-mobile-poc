@@ -1,7 +1,8 @@
 # Quran Revision Mobile POC — Roadmap
 
-**Last updated:** 9 September 2026  
-**Current status:** Version 2 completed
+**Last updated:** 15 September 2026
+
+**Current status:** Version 3 Phase 1 completed; Phase 2 planned
 
 ## Project Goal
 
@@ -45,17 +46,30 @@ Build a focused mobile Quran revision application that helps users organise memo
 
 ## Version 3 — Product-Ready Local Experience
 
-**Status:** Planned
+**Status:** In progress
 
 ### Phase 1 — Manage Memorised Surahs
 
-- [ ] Browse the full Surah catalogue
-- [ ] Add a Surah to the user's memorised list
-- [ ] Prevent duplicate memorisation records
-- [ ] Remove a Surah with confirmation
-- [ ] Display clear success, error, loading, and empty states
+**Status:** Completed
+
+- [x] Create a dedicated screen for managing memorised Surahs
+- [x] Browse and search the available Surah catalogue
+- [x] Display Surah and Juz metadata during selection
+- [x] Add a Surah with its memorised date and mastery level
+- [x] Prevent duplicate memorisation records
+- [x] Display memorised Surahs with their metadata and mastery status
+- [x] Sort newly added Surahs first
+- [x] Edit a Surah's memorised date and mastery level
+- [x] Remove a Surah with confirmation
+- [x] Display success feedback after add, edit, and delete actions
+- [x] Display an empty state when no Surahs are memorised
+- [x] Handle invalid edit routes gracefully
+- [x] Add direct navigation from the home screen
+- [x] Verify the phase with TypeScript and manual device testing
 
 ### Phase 2 — Local Persistence
+
+**Status:** Planned
 
 - [ ] Introduce a storage service instead of accessing storage from UI components
 - [ ] Persist memorisation records using AsyncStorage
@@ -65,6 +79,8 @@ Build a focused mobile Quran revision application that helps users organise memo
 
 ### Phase 3 — Revision History
 
+**Status:** Planned
+
 - [ ] Define a revision-history data model
 - [ ] Create one history entry for every saved revision
 - [ ] Persist revision history locally
@@ -72,11 +88,15 @@ Build a focused mobile Quran revision application that helps users organise memo
 
 ### Phase 4 — Progress Insights
 
+**Status:** Planned
+
 - [ ] Display weekly revision totals
 - [ ] Display the distribution of Weak, Good, and Excellent Surahs
 - [ ] Add one focused progress screen rather than a large dashboard
 
 ### Phase 5 — Release Preparation
+
+**Status:** Planned
 
 - [ ] Test the complete flow on a physical Android device
 - [ ] Review accessibility and small-screen layouts

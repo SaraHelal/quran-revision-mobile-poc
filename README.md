@@ -2,15 +2,35 @@
 
 A mobile-first Quran revision application built with React Native, Expo, and TypeScript.
 
-The app helps users identify memorised Surahs that are due, choose another Surah manually, complete a revision session, rate the result, and automatically schedule the next review.
+The app helps users manage their memorised Surahs, identify which reviews are due, complete revision sessions, rate their performance, and automatically schedule the next review.
 
 ## Current Status
 
-**Version 2 — Scheduling and Review Discovery is complete.**
+**Version 3 Phase 1 — Manage Memorised Surahs is complete.**
 
-The application currently provides a complete in-memory revision experience. Version 3 will add Surah management, local persistence, revision history, progress insights, and an installable Android build.
+The application currently provides a complete in-memory revision and Surah-management experience.
+
+The next phase will introduce local persistence so additions, edits, deletions, and revision results remain available after restarting the application.
 
 ## Completed Features
+
+### Memorised Surah Management
+
+- Dedicated My Surahs screen
+- Full Surah catalogue browsing and search
+- Automatic Surah number and Juz metadata display
+- Add a Surah with its memorised date and mastery level
+- Prevent duplicate memorisation records
+- Display all memorised Surahs
+- Sort newly added Surahs first
+- Edit memorised dates and mastery levels
+- Delete a Surah with confirmation
+- Display success feedback after add, edit, and delete actions
+- Display an empty state when no Surahs are memorised
+- Handle invalid edit routes gracefully
+- Direct navigation to My Surahs from the home screen
+
+### Revision and Scheduling
 
 - Suggested and manual review modes
 - Spaced review intervals based on mastery
@@ -19,7 +39,7 @@ The application currently provides a complete in-memory revision experience. Ver
 - Manual Surah search
 - Juz filtering with dynamic options
 - Latest Added and Weakest First sorting
-- Matching-result count and empty states
+- Matching-result counts and empty states
 - Full static Surah catalogue with Juz metadata
 - Separate catalogue and user memorisation records
 - Revision sessions with Weak, Good, and Excellent results
@@ -32,11 +52,11 @@ The application currently provides a complete in-memory revision experience. Ver
 
 ## Review Schedule
 
-| Result | Next review |
-|---|---:|
-| Weak | 1 day |
-| Good | 3 days |
-| Excellent | 7 days |
+| Result    | Next review |
+| --------- | ----------: |
+| Weak      |       1 day |
+| Good      |      3 days |
+| Excellent |      7 days |
 
 ## Tech Stack
 
@@ -46,33 +66,40 @@ The application currently provides a complete in-memory revision experience. Ver
 - Expo Router
 - React Context
 - React Native `StyleSheet`
+- React Native Community DateTimePicker
 
 ## Project Structure
 
 ```text
-app/                         Screens and file-based routes
-components/                  Reusable interface components
-constants/                   Shared presentation constants
-context/                     Shared application state and actions
-data/surahCatalog.ts         Static Quran metadata
-data/mockMemorizationRecords.ts
-                              Temporary user data
-types/                       Shared TypeScript domain types
-utils/                       Scheduling and data-building utilities
-docs/                        Architecture and roadmap documentation
+app/                              Screens and file-based routes
+  index.tsx                       Today's Revision screen
+  manage-surahs.tsx               Memorised Surah management screen
+  add-surah.tsx                   Add Surah form
+  edit-surah/[id].tsx             Edit Surah form
+  review/[id].tsx                 Revision session route
+
+components/                       Reusable interface components
+constants/                        Shared presentation constants
+context/                          Shared application state and actions
+data/surahCatalog.ts              Static Quran metadata
+data/mockMemorizationRecords.ts   Temporary user memorisation records
+types/                            Shared TypeScript domain types
+utils/                            Scheduling, formatting, and data utilities
+docs/                             Architecture and roadmap documentation
 ```
 
 ## Data Design
 
-Static Quran metadata and user-specific revision data are stored separately.
+Static Quran metadata and user-specific memorisation data are stored separately.
 
 - `SurahMetadata` contains names, Surah number, and Juz membership.
-- `MemorizationRecord` contains mastery and review dates.
-- `buildMemorizedSurahs` joins them by Surah number for presentation.
+- `MemorizationRecord` contains the memorised date, mastery status, review dates, and record metadata.
+- `MemorizedSurah` combines the catalogue metadata and memorisation record.
+- `buildMemorizedSurahs` joins the two sources by Surah number for presentation.
 
-This keeps the source of truth clear and prepares the application for persistent storage without duplicating catalogue data.
+This keeps the source of truth clear, prevents catalogue metadata from being duplicated, and prepares the application for persistent storage.
 
-## Core Flow
+## Core Revision Flow
 
 1. Open Today's Revision.
 2. Review a suggested Surah or choose one manually.
@@ -81,21 +108,42 @@ This keeps the source of truth clear and prepares the application for persistent
 5. Save the result.
 6. Return to the home screen with an updated schedule and confirmation message.
 
+## Surah Management Flow
+
+1. Open My Surahs from the home screen.
+2. Browse the current memorised Surahs.
+3. Add a Surah from the available catalogue.
+4. Choose its memorised date and mastery level.
+5. Edit the date or mastery level when required.
+6. Delete a Surah after confirming the action.
+7. Return to the list with immediate feedback.
+
 ## Current Limitation
 
-User records are still held in memory. Reloading or restarting the application restores the mock records. Version 3 will replace this behaviour with local persistent storage.
+User records are still held in memory through React Context.
+
+Reloading or restarting the application restores the original mock records. Version 3 Phase 2 will replace this behaviour with local persistent storage using AsyncStorage.
 
 ## Version 3 Direction
 
-Version 3 focuses on making the application usable by external testers:
+Version 3 focuses on making the application usable by external testers.
 
-- Add and remove memorised Surahs
+### Completed
+
+- Manage memorised Surahs
+- Add, edit, and delete memorisation records
+- Prevent duplicate records
+- Display success and empty states
+
+### Planned
+
 - Persist data locally with AsyncStorage
+- Restore saved data when the application starts
 - Record revision history
 - Display focused progress analytics
 - Create an installable Android build
 
-Firebase authentication and cloud synchronisation are intentionally deferred until the product requires accounts or multi-device access.
+Firebase Authentication and cloud synchronisation are intentionally deferred until the product requires user accounts or multi-device access.
 
 ## Getting Started
 
@@ -111,7 +159,13 @@ Start Expo:
 npx expo start
 ```
 
-Open the project with a compatible Expo Go application or Android development environment.
+Open the project using Expo Go or a compatible Android development environment.
+
+Run the TypeScript check:
+
+```bash
+npx tsc --noEmit
+```
 
 ## Documentation
 
@@ -120,4 +174,6 @@ Open the project with a compatible Expo Go application or Android development en
 
 ## Related Project
 
-This repository is the mobile implementation of the broader Quran Revision product concept. A separate web version uses React, TypeScript, Firebase Authentication, and Cloud Firestore.
+This repository is the mobile implementation of the broader Quran Revision product concept.
+
+A separate web version uses React, TypeScript, Firebase Authentication, and Cloud Firestore.
