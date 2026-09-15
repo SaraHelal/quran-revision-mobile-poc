@@ -102,6 +102,14 @@ export default function ManageSurahsScreen() {
                   }
                 />
               )}
+              ListEmptyComponent={
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyTitle}>No memorised Surahs yet</Text>
+                  <Text style={styles.emptyText}>
+                    Add your first Surah to start organising your revision.
+                  </Text>
+                </View>
+              }
             ></FlatList>
           </View>
         </View>
@@ -182,5 +190,28 @@ const styles = StyleSheet.create({
     color: "#007A55",
     textAlign: "center",
     fontWeight: "600",
+  },
+  emptyContainer: {
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "#F9FAFB",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#D1D5DB",
+    borderRadius: 12,
+    padding: 24,
+    gap: 8,
+  },
+  emptyTitle: {
+    color: "#1E2939",
+    fontSize: 17,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  emptyText: {
+    color: "#6B7280",
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: "center",
   },
 });
