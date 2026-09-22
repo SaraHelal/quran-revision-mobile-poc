@@ -1,8 +1,8 @@
 # Quran Revision Mobile POC — Roadmap
 
-**Last updated:** 15 September 2026
+**Last updated:** 22 September 2026
 
-**Current status:** Version 3 Phase 1 completed; Phase 2 planned
+**Current status:** Version 3 Phase 2 completed; Phase 3 planned
 
 ## Project Goal
 
@@ -69,13 +69,21 @@ Build a focused mobile Quran revision application that helps users organise memo
 
 ### Phase 2 — Local Persistence
 
-**Status:** Planned
+**Status:** Completed
 
-- [ ] Introduce a storage service instead of accessing storage from UI components
-- [ ] Persist memorisation records using AsyncStorage
-- [ ] Restore records when the application starts
-- [ ] Persist changes made after revision sessions
-- [ ] Handle loading and storage failure states
+- [x] Install and configure AsyncStorage
+- [x] Introduce a storage service instead of accessing storage from UI components
+- [x] Persist memorisation records using AsyncStorage
+- [x] Restore memorisation records when the application starts
+- [x] Persist added, edited, and deleted Surahs
+- [x] Persist mastery and scheduling changes after revision sessions
+- [x] Display a loading state while stored records are restored
+- [x] Handle storage reading and writing failures
+- [x] Keep stored data separate from the static Surah catalogue
+- [x] Start new installations with an empty memorised Surah list
+- [x] Preserve an intentionally empty list instead of restoring mock data
+- [x] Verify persistence after fully closing and reopening the application
+- [x] Verify the phase with TypeScript and physical-device testing
 
 ### Phase 3 — Revision History
 
@@ -83,27 +91,51 @@ Build a focused mobile Quran revision application that helps users organise memo
 
 - [ ] Define a revision-history data model
 - [ ] Create one history entry for every saved revision
+- [ ] Store the Surah, mastery result, and revision date in each entry
+- [ ] Create a dedicated revision-history storage service
 - [ ] Persist revision history locally
+- [ ] Restore revision history when the application starts
 - [ ] Display recent revision activity
+- [ ] Add an empty state when no revisions have been completed
+- [ ] Handle history loading and storage failure states
 
-### Phase 4 — Progress Insights
-
-**Status:** Planned
-
-- [ ] Display weekly revision totals
-- [ ] Display the distribution of Weak, Good, and Excellent Surahs
-- [ ] Add one focused progress screen rather than a large dashboard
-
-### Phase 5 — Release Preparation
+### Phase 4 — Simple Analytics
 
 **Status:** Planned
 
-- [ ] Test the complete flow on a physical Android device
+- [ ] Calculate weekly revision totals from revision history
+- [ ] Calculate the distribution of Weak, Good, and Excellent results
+- [ ] Display a small set of useful progress metrics
+- [ ] Add one simple chart
+- [ ] Create one focused progress screen instead of a large dashboard
+- [ ] Handle empty analytics when there is not enough history
+
+### Phase 5 — Polish, Testing, and Portfolio Release
+
+**Status:** In progress
+
+- [x] Configure EAS Build for Android
+- [x] Create an installable Android preview build
+- [ ] Test the latest build across the complete user flow on a physical Android device
+- [ ] Review first-use, empty, success, loading, and error states
 - [ ] Review accessibility and small-screen layouts
-- [ ] Add an application icon and launch screen
-- [ ] Create an installable Android build using EAS Build
-- [ ] Share the build with external testers
-- [ ] Add setup instructions and portfolio screenshots
+- [ ] Add a custom application icon and launch screen
+- [ ] Share the Android build with external testers
+- [ ] Collect and prioritise tester feedback
+- [ ] Fix high-priority usability and stability issues
+- [ ] Add setup and build instructions to the README
+- [ ] Add portfolio screenshots
+- [ ] Prepare a concise technical and product case study
+
+## After Version 3
+
+After the product milestone is complete:
+
+- Prepare a short project walkthrough
+- Practise explaining the product problem and technical decisions
+- Prepare for React Native and frontend interview questions
+- Update the CV and portfolio with the completed project
+- Use the working prototype when contacting relevant Quran technology teams
 
 ## Later Versions
 
@@ -126,3 +158,5 @@ The following ideas are intentionally outside Version 3:
 - Use TypeScript to make data contracts explicit
 - Add backend complexity only when the product requires it
 - Test behaviour before marking a phase as complete
+- Keep analytics focused on decisions that help the user
+- Avoid expanding the scope before validating the current product
