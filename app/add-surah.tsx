@@ -226,17 +226,34 @@ export default function AddSurahScreen() {
               <FlatList
                 data={filteredSurahs}
                 keyExtractor={(item) => item.surahNumber.toString()}
-                renderItem={({ item }) => (
-                  <Pressable
-                    style={styles.surahItem}
-                    onPress={() => {
-                      setSelectedSurah(item);
-                      setIsSurahModalVisible(false);
-                    }}
-                  >
-                    <Text style={styles.surahItemText}>{item.surahName}</Text>
-                  </Pressable>
-                )}
+                renderItem={({ item }) => {
+                  const isSelected =
+                    selectedSurah?.surahNumber === item.surahNumber;
+
+                  return (
+                    <Pressable
+                      style={[
+                        styles.surahItem,
+                        isSelected && styles.selectedSurahItem,
+                      ]}
+                      onPress={() => {
+                        setSelectedSurah(item);
+                        setIsSurahModalVisible(false);
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.surahItemText,
+                          isSelected && styles.selectedSurahItemText,
+                        ]}
+                      >
+                        {item.surahName}
+                      </Text>
+
+                      {isSelected && <Text style={styles.selectedIcon}>✓</Text>}
+                    </Pressable>
+                  );
+                }}
               />
             </View>
           </View>
@@ -368,11 +385,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
   },
-  surahItem: {
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
-  },
+
   surahItemText: {
     color: "#1E2939",
     fontSize: 16,
@@ -407,5 +420,32 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 15,
     marginBottom: 10,
+  },
+  surahItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+  },
+
+  selectedSurahItem: {
+    backgroundColor: "#ECFDF5",
+    borderWidth: 1,
+    borderColor: "#6EE7B7",
+  },
+
+  selectedSurahItemText: {
+    color: "#007A55",
+    fontWeight: "700",
+  },
+
+  selectedIcon: {
+    color: "#009768",
+    fontSize: 18,
+    fontWeight: "700",
   },
 });

@@ -1,4 +1,5 @@
 import ManualSurahList from "@/components/ManualSurahList";
+import PrimaryButton from "@/components/PrimaryButton";
 import ReviewModeTabs from "@/components/ReviewModeTabs";
 import SuggestedSurahList from "@/components/SuggestedSurahList";
 import { useSurahs } from "@/context/SurahsContext";
@@ -66,7 +67,9 @@ export default function Index() {
           <Text style={styles.title}>{"Today's Revision"}</Text>
 
           <Text style={styles.subtitle}>
-            {"Review what's due, or choose a Surah yourself."}
+            {surahs.length === 0
+              ? "Add your memorised Surahs to begin your revision plan."
+              : "Review what's due, or choose a Surah yourself."}
           </Text>
         </View>
         {successMsg && (
@@ -75,18 +78,44 @@ export default function Index() {
           </View>
         )}
 
-        <View style={styles.main}>
-          <ReviewModeTabs
-            reviewMode={reviewMode}
-            onReviewModeChange={setReviewMode}
-          />
-          {reviewMode === "suggested" ? (
-            <SuggestedSurahList
-              surahs={sortedDueSurahs}
-              onStartReview={handleRevision}
-            />
+        <View style={[styles.main, surahs.length === 0 && styles.emptyMain]}>
+          {surahs.length === 0 ? (
+            <View style={styles.firstUseContainer}>
+              <Text style={styles.firstUseIcon}>📖</Text>
+
+              <Text style={styles.firstUseTitle}>No Surahs added yet</Text>
+
+              <Text style={styles.firstUseText}>
+                Add the Surahs you have memorised to start building your
+                revision plan.
+              </Text>
+
+              <View style={styles.firstUseButton}>
+                <PrimaryButton
+                  label="Add Your First Surah"
+                  onPress={() => router.push("/add-surah")}
+                />
+              </View>
+            </View>
           ) : (
-            <ManualSurahList surahs={surahs} onStartReview={handleRevision} />
+            <>
+              <ReviewModeTabs
+                reviewMode={reviewMode}
+                onReviewModeChange={setReviewMode}
+              />
+
+              {reviewMode === "suggested" ? (
+                <SuggestedSurahList
+                  surahs={sortedDueSurahs}
+                  onStartReview={handleRevision}
+                />
+              ) : (
+                <ManualSurahList
+                  surahs={surahs}
+                  onStartReview={handleRevision}
+                />
+              )}
+            </>
           )}
         </View>
       </SafeAreaView>
@@ -164,5 +193,38 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     padding: 10,
     borderRadius: 12,
+  },
+  firstUseContainer: {
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 8,
+  },
+
+  firstUseIcon: {
+    fontSize: 36,
+  },
+
+  firstUseTitle: {
+    color: "#1E2939",
+    fontSize: 22,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+
+  firstUseText: {
+    color: "#6B7280",
+    fontSize: 16,
+    lineHeight: 23,
+    textAlign: "center",
+  },
+
+  firstUseButton: {
+    width: "100%",
+    marginTop: 10,
+  },
+  emptyMain: {
+    flex: 0,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
 });

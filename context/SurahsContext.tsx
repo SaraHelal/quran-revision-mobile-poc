@@ -1,4 +1,3 @@
-import { mockMemorizationRecords } from "@/data/mockMemorizationRecords";
 import { surahCatalog } from "@/data/surahCatalog";
 import {
   loadMemorizationRecords,
@@ -71,8 +70,8 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
         const storedRecords = await loadMemorizationRecords();
 
         if (storedRecords === null) {
-          setRecords(mockMemorizationRecords);
-          await saveMemorizationRecords(mockMemorizationRecords);
+          setRecords([]);
+          await saveMemorizationRecords([]);
         } else {
           setRecords(storedRecords);
         }
@@ -83,7 +82,7 @@ export function SurahsProvider({ children }: { children: React.ReactNode }) {
           "We couldn't load your saved Surahs. Please restart the app.",
         );
 
-        setRecords(mockMemorizationRecords);
+        setRecords([]);
       } finally {
         setIsLoading(false);
       }
