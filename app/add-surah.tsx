@@ -52,20 +52,23 @@ export default function AddSurahScreen() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedSurah) {
       return;
     }
 
-    addSurah({
-      surahNumber: selectedSurah.surahNumber,
-      status: selectedStatus,
-      memorizedAt: formatDateOnly(memorizedDate),
-    });
+    try {
+      await addSurah({
+        surahNumber: selectedSurah.surahNumber,
+        status: selectedStatus,
+        memorizedAt: formatDateOnly(memorizedDate),
+      });
 
-    setSuccessMsg(`${selectedSurah.surahName} was added successfully.`);
-
-    router.back();
+      setSuccessMsg(`${selectedSurah.surahName} was added successfully.`);
+      router.back();
+    } catch (error) {
+      console.error("Failed to add Surah:", error);
+    }
   };
   return (
     <>

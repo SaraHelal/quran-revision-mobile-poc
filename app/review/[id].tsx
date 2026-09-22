@@ -32,11 +32,20 @@ export default function ReviewScreen() {
     setSelectedResult(result);
   };
 
-  const handleSaveRevision = (updatedStatus: MasteryStatus) => {
+  const handleSaveRevision = async (
+    updatedStatus: MasteryStatus,
+  ): Promise<void> => {
     if (!surah) return;
-    saveRevision(surah.id, updatedStatus);
-    setSuccessMsg(`${surah.surahName} revision saved successfully`);
-    setIsRevisionSaved(true);
+
+    try {
+      await saveRevision(surah.id, updatedStatus);
+
+      setSuccessMsg(`${surah.surahName} revision saved successfully`);
+
+      setIsRevisionSaved(true);
+    } catch (error) {
+      console.error("Failed to save revision:", error);
+    }
   };
 
   useEffect(() => {

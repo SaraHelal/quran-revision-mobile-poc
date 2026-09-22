@@ -36,9 +36,13 @@ export default function ManageSurahsScreen() {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            deleteSurah(surahId);
-            setSuccessMsg(`${surahName} was deleted successfully.`);
+          onPress: async () => {
+            try {
+              await deleteSurah(surahId);
+              setSuccessMsg(`${surahName} was deleted successfully.`);
+            } catch (error) {
+              console.error("Failed to delete Surah:", error);
+            }
           },
         },
       ],

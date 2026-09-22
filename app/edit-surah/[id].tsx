@@ -2,7 +2,7 @@ import { useSurahs } from "@/context/SurahsContext";
 import type { MasteryStatus } from "@/types";
 import { formatDateOnly, parseDateOnly } from "@/utils/formatDateOnly";
 import DateTimePicker, {
-    type DateTimePickerEvent,
+  type DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -37,12 +37,12 @@ export default function EditSurahScreen() {
       setMemorizedDate(selectedDate);
     }
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!surahToEdit) {
       return;
     }
 
-    updateSurah(surahToEdit.id, {
+    await updateSurah(surahToEdit.id, {
       status: selectedStatus,
       memorizedAt: formatDateOnly(memorizedDate),
     });
